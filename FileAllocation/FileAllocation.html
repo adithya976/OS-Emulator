@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Allocation Methods in Operating Systems</title>
+    <link rel="stylesheet" href="FileAllocation.css">
+</head>
+<body>
+    <header>
+        <h1 style="color:aliceblue;">File Allocation Methods in Operating Systems</h1>
+    </header>
+
+    <main>
+        <section id="introduction">
+            <h2>Introduction to File Systems</h2>
+            <p>A file system is a method used by operating systems to organize and store files on storage devices like hard disks, SSDs, or other storage media. It provides a way to name, access, and organize files in a structured manner.</p>
+            
+            <h3>What is File Allocation?</h3>
+            <p>File allocation refers to the method used by the operating system to allocate disk space to files. When a file is created, the operating system needs to find and allocate free blocks on the disk to store the file's data. Similarly, when a file grows, more blocks need to be allocated.</p>
+            
+            <h3>Why is File Allocation Necessary?</h3>
+            <p>File allocation is necessary for several reasons:</p>
+            <ul>
+                <li><strong>Efficient Disk Space Utilization:</strong> Proper allocation ensures disk space is used efficiently without wasting resources.</li>
+                <li><strong>Fast File Access:</strong> An appropriate allocation method can significantly improve file access speed.</li>
+                <li><strong>Reduced Fragmentation:</strong> Good allocation strategies minimize fragmentation, which can degrade system performance over time.</li>
+                <li><strong>Support for File Operations:</strong> It enables operations like reading, writing, extending, and deleting files.</li>
+            </ul>
+        </section>
+
+        <section id="allocation-methods">
+            <h2>Types of File Allocation Methods</h2>
+
+            <div class="allocation-method">
+                <h3>1. Sequential (Contiguous) Allocation</h3>
+                <p>In contiguous allocation, each file occupies a contiguous set of blocks on the disk. A file is defined by the disk address of the first block and the number of blocks it occupies.</p>
+                
+                <h4>Advantages:</h4>
+                <ul>
+                    <li>Simple to implement</li>
+                    <li>Excellent read performance due to sequential access</li>
+                    <li>Supports both sequential and direct access</li>
+                </ul>
+                
+                <h4>Disadvantages:</h4>
+                <ul>
+                    <li>External fragmentation - as files are created and deleted, free space becomes fragmented</li>
+                    <li>Difficult to know the final size of a file when it's created</li>
+                    <li>File growth is difficult and may require relocation</li>
+                </ul>
+            </div>
+
+            <div class="allocation-method">
+                <h3>2. Linked Allocation</h3>
+                <p>In linked allocation, each file is a linked list of disk blocks. Each block contains a pointer to the next block in the chain. The directory contains pointers to the first and last blocks of the file.</p>
+                
+                <h4>Advantages:</h4>
+                <ul>
+                    <li>No external fragmentation</li>
+                    <li>Files can grow dynamically as long as free blocks are available</li>
+                    <li>No need to declare the file size at creation time</li>
+                </ul>
+                
+                <h4>Disadvantages:</h4>
+                <ul>
+                    <li>Poor performance for direct access - to access block i, we must start at the beginning and follow i-1 pointers</li>
+                    <li>Storage space wasted for pointers</li>
+                    <li>Reliability issues - if a pointer is lost or damaged, the rest of the file becomes inaccessible</li>
+                </ul>
+
+                <h4>File Allocation Table (FAT):</h4>
+                <p>A variation of linked allocation where all pointers are stored in a separate table (the FAT) at the beginning of the disk. This improves direct access and reliability but adds overhead in maintaining the table.</p>
+            </div>
+
+            <div class="allocation-method">
+                <h3>3. Indexed Allocation</h3>
+                <p>In indexed allocation, each file has an index block that contains pointers to all the blocks of the file. The directory entry points to the index block.</p>
+                
+                <h4>Advantages:</h4>
+                <ul>
+                    <li>Supports direct access without external fragmentation</li>
+                    <li>Files can grow as needed as long as index blocks and data blocks are available</li>
+                    <li>No issues with block consolidation</li>
+                </ul>
+                
+                <h4>Disadvantages:</h4>
+                <ul>
+                    <li>Index block overhead - additional space required for index blocks</li>
+                    <li>Maximum file size limited by the size of the index block</li>
+                    <li>Multiple disk accesses required for accessing data (first the index block, then the data block)</li>
+                </ul>
+
+                <h4>Index Block Schemes:</h4>
+                <p>Several schemes address the limitations of the single index block:</p>
+                <ul>
+                    <li><strong>Linked Scheme:</strong> Link multiple index blocks together</li>
+                    <li><strong>Multi-level Index:</strong> Use a hierarchical structure of index blocks</li>
+                    <li><strong>Combined Scheme:</strong> Use direct blocks for small files and indirect blocks for larger files (like in Unix inode)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="simulation">
+            <h2>File Allocation Simulation</h2>
+            
+            <div class="simulation-controls">
+                <h3>Configure Simulation</h3>
+                <div class="input-group">
+                    <label for="total-blocks">Total Disk Blocks:</label>
+                    <input type="number" id="total-blocks" min="10" max="100" value="30">
+                </div>
+                
+                <div class="input-group">
+                    <label for="num-files">Number of Files:</label>
+                    <input type="number" id="num-files" min="1" max="10" value="3">
+                </div>
+
+                <div id="file-sizes-container">
+                    <!-- File size inputs will be dynamically generated here -->
+                </div>
+
+                <div class="input-group">
+                    <label for="allocation-method">Allocation Method:</label>
+                    <select id="allocation-method">
+                        <option value="contiguous">Sequential (Contiguous)</option>
+                        <option value="linked">Linked</option>
+                        <option value="indexed">Indexed</option>
+                    </select>
+                </div>
+
+                <button id="run-simulation">Run Simulation</button>
+                <button id="reset-simulation">Reset</button>
+            </div>
+
+            <div class="simulation-results">
+                <div class="disk-representation">
+                    <h3>Disk Blocks</h3>
+                    <div id="disk-container">
+                        <!-- Disk blocks will be rendered here -->
+                    </div>
+                </div>
+
+                <div class="allocation-details">
+                    <h3>Allocation Details</h3>
+                    <div id="allocation-info">
+                        <!-- Allocation information will be shown here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Created for educational purposes - File Allocation Methods in Operating Systems</p>
+    </footer>
+
+    <script src="FileAllocation.js"></script>
+</body>
+</html>
