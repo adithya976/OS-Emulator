@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Memory Allocation Simulation - MVT & MFT</title>
+  <link rel="stylesheet" href="memall.css">
+</head>
+<body>
+  <header>
+    <h1>Memory Allocation Methods in Operating Systems</h1>
+  </header>
+  <main>
+    <section id="introduction">
+      <h2>Introduction to Memory Management</h2>
+      <p>Memory management is a critical function of operating systems that handles the allocation and deallocation of memory space to various processes. It keeps track of the status of each memory location, whether it is allocated or free, and ensures efficient utilization of memory resources.</p>
+      
+      <h3>What is Memory Allocation?</h3>
+      <p>Memory allocation is the process of assigning blocks of memory to programs, services, or processes. When a program needs memory, the operating system allocates a portion of the available memory to that program. The allocation can be done using different techniques, each with its own advantages and limitations.</p>
+      
+      <h3>Why is Memory Allocation Necessary?</h3>
+      <p>Memory allocation is necessary for several reasons:</p>
+      <ul>
+        <li><strong>Resource Management:</strong> It ensures that memory, a limited resource, is distributed efficiently among competing processes.</li>
+        <li><strong>Process Isolation:</strong> Proper memory allocation helps isolate processes from each other, enhancing system stability and security.</li>
+        <li><strong>Performance Optimization:</strong> Efficient memory allocation strategies can significantly improve system performance.</li>
+        <li><strong>Multitasking Support:</strong> It enables multiple programs to run simultaneously without interfering with each other's memory space.</li>
+      </ul>
+    </section>
+
+    <section id="allocation-methods">
+      <h2>Types of Memory Allocation Methods</h2>
+
+      <div class="allocation-method">
+        <h3>1. Multiprogramming with Fixed number of Tasks (MFT)</h3>
+        <p>In MFT, the main memory is divided into fixed-sized partitions, and each partition can contain exactly one process. The number of partitions in the memory is fixed, and so is the number of processes that can reside in main memory at any point in time.</p>
+        
+        <div class="method-details">
+          <div class="method-pros">
+            <h4>Advantages:</h4>
+            <ul>
+              <li>Simple to implement and manage</li>
+              <li>No external fragmentation</li>
+              <li>Easy to keep track of free and occupied memory blocks</li>
+            </ul>
+          </div>
+          
+          <div class="method-cons">
+            <h4>Disadvantages:</h4>
+            <ul>
+              <li>Internal fragmentation - wasted memory within partitions</li>
+              <li>Inflexible - partition sizes cannot be adjusted based on process needs</li>
+              <li>Inefficient memory utilization for varying process sizes</li>
+              <li>Limited number of active processes</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="allocation-method">
+        <h3>2. Multiprogramming with Variable number of Tasks (MVT)</h3>
+        <p>In MVT, the memory is allocated to processes exactly as much as required. There are no fixed partitions, and the number of processes in memory can vary. The operating system maintains information about allocated and free memory blocks.</p>
+        
+        <div class="method-details">
+          <div class="method-pros">
+            <h4>Advantages:</h4>
+            <ul>
+              <li>No internal fragmentation</li>
+              <li>Better memory utilization compared to MFT</li>
+              <li>Flexible allocation based on process requirements</li>
+              <li>Variable number of processes can be accommodated</li>
+            </ul>
+          </div>
+          
+          <div class="method-cons">
+            <h4>Disadvantages:</h4>
+            <ul>
+              <li>External fragmentation - free memory gets fragmented over time</li>
+              <li>More complex memory management algorithms required</li>
+              <li>Overhead in maintaining information about memory blocks</li>
+              <li>May require compaction to reclaim fragmented memory</li>
+            </ul>
+          </div>
+        </div>
+
+        <h4>Allocation Strategies in MVT:</h4>
+        <p>Several strategies are used to allocate memory blocks to processes:</p>
+        <div class="strategies-container">
+          <div class="strategy">
+            <h5>First Fit</h5>
+            <p>Allocates the first available block that is large enough for the process. This algorithm starts searching from the beginning of memory and allocates the first free block that is big enough.</p>
+            <p><strong>Pros:</strong> Fast allocation, minimal searching overhead</p>
+            <p><strong>Cons:</strong> Can lead to many small fragments near the beginning of memory</p>
+          </div>
+          <div class="strategy">
+            <h5>Best Fit</h5>
+            <p>Allocates the smallest available block that is large enough for the process. This minimizes wasted space but requires searching the entire memory.</p>
+            <p><strong>Pros:</strong> Minimizes wasted memory space</p>
+            <p><strong>Cons:</strong> Slower allocation, tends to create very small unusable fragments</p>
+          </div>
+          <div class="strategy">
+            <h5>Worst Fit</h5>
+            <p>Allocates the largest available block to a process. The idea is to leave behind large enough fragments that can be used by other processes.</p>
+            <p><strong>Pros:</strong> Leaves larger free blocks for future allocations</p>
+            <p><strong>Cons:</strong> Slower allocation, can lead to inefficient memory usage over time</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="compaction">
+      <h2>Memory Compaction in MVT</h2>
+      
+      <div class="compaction-info">
+        <div class="compaction-problem">
+          <h3>The Problem: External Fragmentation</h3>
+          <p>External fragmentation occurs in MVT when free memory space exists in small, non-contiguous blocks scattered throughout the memory. Although the total free memory might be sufficient for a new process, it cannot be allocated because the free memory is not contiguous.</p>
+          
+          <div class="fragmentation-diagram">
+            <div class="diagram-title">External Fragmentation</div>
+            <div class="diagram-content">
+              <div class="memory-block used"><span>Process A</span></div>
+              <div class="memory-block free"><span>Free (10KB)</span></div>
+              <div class="memory-block used"><span>Process B</span></div>
+              <div class="memory-block free"><span>Free (15KB)</span></div>
+              <div class="memory-block used"><span>Process C</span></div>
+              <div class="memory-block free"><span>Free (20KB)</span></div>
+            </div>
+            <div class="diagram-caption">Total free memory: 45KB, but unable to allocate a process requiring 40KB due to fragmentation</div>
+          </div>
+        </div>
+        
+        <div class="compaction-solution">
+          <h3>The Solution: Memory Compaction</h3>
+          <p>Memory compaction is the process of moving all occupied memory blocks to one end of the memory (usually the lower end), creating a single large free memory block at the other end. This eliminates external fragmentation by consolidating free memory into a contiguous block.</p>
+          
+          <div class="fragmentation-diagram">
+            <div class="diagram-title">After Compaction</div>
+            <div class="diagram-content">
+              <div class="memory-block used"><span>Process A</span></div>
+              <div class="memory-block used"><span>Process B</span></div>
+              <div class="memory-block used"><span>Process C</span></div>
+              <div class="memory-block free"><span>Free (45KB)</span></div>
+            </div>
+            <div class="diagram-caption">All free memory consolidated, now able to allocate a process requiring 40KB</div>
+          </div>
+          
+          <h4>Key Aspects of Memory Compaction:</h4>
+          <ul>
+            <li><strong>Dynamic Relocation:</strong> Requires hardware support for dynamic address translation or relocation registers to update process addresses</li>
+            <li><strong>Performance Impact:</strong> Compaction is a time-consuming operation that temporarily halts normal processing</li>
+            <li><strong>Triggering Conditions:</strong> Typically performed when a memory allocation request cannot be satisfied despite having enough total free memory</li>
+            <li><strong>Implementation:</strong> Involves copying process data, updating memory tables, and resetting base registers</li>
+          </ul>
+          
+          <h4>Compaction Challenges:</h4>
+          <ul>
+            <li><strong>CPU Overhead:</strong> Significant CPU time required to move memory contents</li>
+            <li><strong>System Pause:</strong> Normal execution must be suspended during compaction</li>
+            <li><strong>Address Adjustment:</strong> All references to relocated memory must be updated</li>
+            <li><strong>Frequency:</strong> Too frequent compaction can degrade system performance</li>
+          </ul>
+          
+          <h4>Alternatives to Compaction:</h4>
+          <ul>
+            <li><strong>Paging:</strong> Divides memory into fixed-size frames and processes into same-sized pages</li>
+            <li><strong>Segmentation:</strong> Divides memory based on logical segments of varying sizes</li>
+            <li><strong>Virtual Memory:</strong> Allows processes to use more memory than physically available</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="simulation">
+      <h2>Memory Allocation Simulation</h2>
+      <div class="simulation-controls">
+        <div class="input-group">
+          <label for="total-memory">Total Memory Size (KB):</label>
+          <input type="number" id="total-memory" min="100" max="2000" value="500">
+        </div>
+        <div class="input-group">
+          <label for="allocation-type">Allocation Type:</label>
+          <select id="allocation-type">
+            <option value="mft">MFT (Fixed Partitions)</option>
+            <option value="mvt">MVT (Variable Partitions)</option>
+          </select>
+        </div>
+        <div id="mft-controls">
+          <div class="input-group">
+            <label for="num-partitions">Number of Partitions:</label>
+            <input type="number" id="num-partitions" min="2" max="20" value="4">
+          </div>
+          <div id="partition-sizes-container"></div>
+        </div>
+        <div id="mvt-controls" style="display: none;">
+          <div class="input-group">
+            <label>Used Segments:</label>
+            <button id="add-allocated-segment" type="button">Add Segment</button>
+          </div>
+          <div id="allocated-segments-container"></div>
+          <div class="input-group">
+            <button id="run-compaction" type="button">Run Compaction</button>
+          </div>
+        </div>
+        <div class="input-group processes-header">
+          <label>New Processes:</label>
+          <button id="add-process" type="button">Add Process</button>
+        </div>
+        <div id="processes-container"></div>
+        <div class="input-group buttons">
+          <button id="run-simulation" type="button">Run Simulation</button>
+          <button id="reset-simulation" type="button">Reset</button>
+        </div>
+      </div>
+      <div class="simulation-results">
+        <div class="memory-representation">
+          <h3>Memory Blocks</h3>
+          <div id="memory-container"></div>
+          <div id="legend-container" class="legend"></div>
+        </div>
+        <div class="allocation-details">
+          <h3>Allocation Details</h3>
+          <div id="allocation-info"></div>
+          <div id="fragmentation-info"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>Created for educational purposes - Enhanced Memory Allocation Simulation (MVT &amp; MFT)</p>
+  </footer>
+  <script src="memall.js"></script>
+</body>
+</html>
