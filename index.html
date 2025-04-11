@@ -7,53 +7,196 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
+  <header>
     <h1>Operating Systems Simulator</h1>
-    <p>Explore interactive simulations of core Operating System concepts such as memory management and file allocation strategies.</p>
+    <p>Interactive simulations of core Operating System concepts and algorithms</p>
+  </header>
 
-    <div class="card-container">
-      <div class="card" onclick="navigateTo('FileAllocation','FileAllocation')">
-        <h2>File Allocation</h2>
-        <p>Simulations of file allocation strategies like contiguous, linked, and indexed allocation.</p>
+  <div class="container">
+    <section class="introduction">
+      <h2>Welcome to OS Simulator</h2>
+      <p>This interactive platform allows you to explore and understand core Operating System concepts through visual simulations. Whether you're a student learning OS fundamentals or an enthusiast refreshing your knowledge, our simulator provides hands-on experience with various OS algorithms and techniques.</p>
+      <p>Navigate through different modules to explore process scheduling, memory management, file systems, and more. Each simulation is designed to demonstrate the underlying principles and help you visualize how operating systems work behind the scenes.</p>
+    </section>
+
+    <section class="module-info">
+      <h2>Operating Systems: Core Concepts</h2>
+      <div class="module-info-grid">
+        <div class="module-card">
+          <h3>Process Management</h3>
+          <p>Process management is a fundamental component of operating systems that involves controlling the execution of processes. A process is a program in execution that requires resources such as CPU time, memory, files, and I/O devices to accomplish its task.</p>
+          <p>Key aspects include:</p>
+          <ul>
+            <li>Process creation and termination</li>
+            <li>Process scheduling and dispatching</li>
+            <li>Process synchronization</li>
+            <li>Inter-process communication</li>
+          </ul>
+        </div>
+        
+        <div class="module-card">
+          <h3>CPU Scheduling</h3>
+          <p>CPU scheduling is the basis of multi-programmed operating systems. By switching the CPU among processes, the operating system can make the computer more productive. The objective of scheduling is to maximize CPU utilization and throughput while minimizing response time and waiting time.</p>
+          <p>Common scheduling algorithms:</p>
+          <ul>
+            <li>First-Come, First-Served (FCFS): Processes are executed in the order they arrive</li>
+            <li>Shortest Job First (SJF): Selects the process with the smallest execution time</li>
+            <li>Round Robin: Each process gets a small unit of CPU time, and then is preempted</li>
+            <li>Priority Scheduling: Assigns priority to each process and schedules based on priority</li>
+          </ul>
+        </div>
+        
+        <div class="module-card">
+          <h3>Process Synchronization</h3>
+          <p>Process synchronization involves coordinating the execution of processes to maintain data consistency and avoid deadlocks. This is crucial in multi-process systems where processes compete for shared resources.</p>
+          <p>Classic synchronization problems:</p>
+          <ul>
+            <li>Producer-Consumer Problem: Balancing production and consumption rates</li>
+            <li>Readers-Writers Problem: Managing concurrent access to shared data</li>
+            <li>Dining Philosophers Problem: Resource allocation without deadlocks</li>
+          </ul>
+        </div>
+        
+        <div class="module-card">
+          <h3>Deadlock Management</h3>
+          <p>A deadlock is a situation where a set of processes are blocked because each process is holding a resource and waiting for another resource acquired by some other process. Operating systems employ various strategies to handle deadlocks.</p>
+          <p>Approaches to deadlock management:</p>
+          <ul>
+            <li>Deadlock Prevention: Ensuring at least one of the necessary conditions for deadlock never occurs</li>
+            <li>Deadlock Avoidance: Banker's Algorithm to dynamically avoid deadlock states</li>
+            <li>Deadlock Detection: Identifying when deadlocks have occurred</li>
+            <li>Deadlock Recovery: Breaking deadlocks after detection</li>
+          </ul>
+        </div>
+        
+        <div class="module-card">
+          <h3>Memory Management</h3>
+          <p>Memory management involves keeping track of each and every memory location and determining which process gets memory at what time. It optimizes both memory use and system performance.</p>
+          <p>Key techniques:</p>
+          <ul>
+            <li>Multiprogramming with Variable Tasks (MVT): Memory allocation where the partition size varies according to process requirements</li>
+            <li>Multiprogramming with Fixed Tasks (MFT): Memory divided into fixed-size partitions</li>
+            <li>Paging: Non-contiguous memory allocation method that avoids external fragmentation</li>
+            <li>Segmentation: Memory management scheme that supports the user view of memory</li>
+          </ul>
+        </div>
+        
+        <div class="module-card">
+          <h3>Memory Allocation</h3>
+          <p>Memory allocation involves assigning blocks of memory to processes. Efficient allocation minimizes fragmentation and maximizes memory utilization.</p>
+          <p>Contiguous allocation strategies:</p>
+          <ul>
+            <li>First-fit: Allocates the first available memory block that is large enough</li>
+            <li>Best-fit: Allocates the smallest available block that fits the process</li>
+            <li>Worst-fit: Allocates the largest available block to maximize remaining space</li>
+            <li>Next-fit: Like first-fit but starts searching from the location of the last placement</li>
+          </ul>
+        </div>
+        
+        <div class="module-card">
+          <h3>Page Replacement</h3>
+          <p>Page replacement algorithms decide which memory pages to swap out when a page fault occurs and a new page needs to be brought in. These algorithms aim to reduce the number of page faults.</p>
+          <p>Common algorithms:</p>
+          <ul>
+            <li>FIFO (First-In-First-Out): Replaces the oldest page in memory</li>
+            <li>Optimal: Replaces the page that will not be used for the longest time</li>
+            <li>LRU (Least Recently Used): Replaces page that hasn't been used for the longest time</li>
+            <li>LFU (Least Frequently Used): Replaces page with the lowest access frequency</li>
+          </ul>
+        </div>
+        
+        <div class="module-card">
+          <h3>Disk Scheduling</h3>
+          <p>Disk scheduling is about determining the order in which disk I/O requests are serviced. The goal is to minimize seek time and maximize throughput.</p>
+          <p>Common disk scheduling algorithms:</p>
+          <ul>
+            <li>FCFS (First-Come-First-Served): Services requests in the order they arrive</li>
+            <li>SCAN: The disk arm moves in one direction servicing requests until it reaches the end, then reverses</li>
+            <li>SSTF (Shortest Seek Time First): Services the request closest to the current head position</li>
+          </ul>
+        </div>
+        
+        <div class="module-card">
+          <h3>File Systems</h3>
+          <p>File systems provide mechanisms for storing, retrieving, and updating data, as well as managing the available space on devices. They provide a logical view of data to simplify storage and retrieval.</p>
+          <p>File allocation strategies:</p>
+          <ul>
+            <li>Sequential Allocation: Files are stored as contiguous blocks on disk</li>
+            <li>Linked Allocation: Each file is a linked list of disk blocks</li>
+            <li>Indexed Allocation: Uses an index block that contains pointers to data blocks</li>
+          </ul>
+        </div>
+        
+        <div class="module-card">
+          <h3>Directory Structure</h3>
+          <p>Directory structures organize files for quick access and efficient management. They provide a way to group files together and enable hierarchical organization of the file system.</p>
+          <p>Common structures include:</p>
+          <ul>
+            <li>Single-level directory: All files in the same directory</li>
+            <li>Two-level directory: Each user has their own directory</li>
+            <li>Tree-structured directories: Hierarchical organization with arbitrary depth</li>
+            <li>Acyclic and cyclic graph directories: Allow sharing of files and directories</li>
+          </ul>
+        </div>
       </div>
+    </section>
+
+    <h2>Interactive Simulation Modules</h2>
+    <div class="card-container">
+      <div class="card" onclick="navigateTo('SystemCalls','SystemCalls')">
+        <h2>System Calls</h2>
+        <p>Analyze and execute different types of system calls that provide the interface between user programs and the operating system.</p>
+      </div>
+
+      <div class="card" onclick="navigateTo('CPUScheduling','CPUScheduling')">
+        <h2>CPU Scheduling</h2>
+        <p>Simulate non-preemptive CPU scheduling algorithms such as FCFS, SJF, Round Robin, and Priority to analyze turnaround time and waiting time.</p>
+      </div>
+
+      <div class="card" onclick="navigateTo('ProcessSync','ProcessSync')">
+        <h2>Process Synchronization</h2>
+        <p>Explore implementations of Producer-Consumer, Readers-Writers, and Dining-Philosophers problems using semaphores and other synchronization primitives.</p>
+      </div>
+
+      <div class="card" onclick="navigateTo('DeadlockManagement','DeadlockManagement')">
+        <h2>Deadlock Management</h2>
+        <p>Understand deadlock avoidance with Banker's algorithm and learn techniques for deadlock detection in resource allocation systems.</p>
+      </div>
+
       <div class="card" onclick="navigateTo('MemoryManagement','memall')">
         <h2>Memory Management</h2>
-        <p>Explore MVT,MFT and other techniques.</p>
-      </div>
-      <div class="card" onclick="navigateTo('foldername','filename')">
-        <h2> Module Name 3 </h2>
-        <p>Few Lines about the module</p>
-      </div>
-      <div class="card" onclick="navigateTo('foldername','filename')">
-        <h2> Module Name 4</h2>
-        <p>Few Lines about the module</p>
-      </div>
-      <div class="card" onclick="navigateTo('foldername','filename')">
-        <h2> Module Name 5 </h2>
-        <p>Few Lines about the module</p>
-      </div>
-      <div class="card" onclick="navigateTo('foldername','filename')">
-        <h2> Module Name 6 </h2>
-        <p>Few Lines about the module</p>
-      </div>
-      <div class="card" onclick="navigateTo('foldername','filename')">
-        <h2> Module Name 7 </h2>
-        <p>Few Lines about the module</p>
-      </div>
-      <div class="card" onclick="navigateTo('foldername','filename')">
-        <h2> Module Name 8 </h2>
-        <p>Few Lines about the module</p>
-      </div>
-      <div class="card" onclick="navigateTo('foldername','filename')">
-        <h2> Module Name 9 </h2>
-        <p>Few Lines about the module</p>
-      </div>
-      <div class="card" onclick="navigateTo('foldername','filename')">
-        <h2> Module Name 10</h2>
-        <p>Few Lines about the module</p>
+        <p>Explore memory allocation techniques including Multiprogramming with Variable/Fixed Tasks (MVT/MFT) to visualize memory utilization.</p>
       </div>
 
+      <div class="card" onclick="navigateTo('MemoryAllocation','MemoryAllocation')">
+        <h2>Contiguous Memory Allocation</h2>
+        <p>Visualize and compare different contiguous memory allocation strategies including First-fit, Best-fit, Worst-fit, and Next-fit algorithms.</p>
+      </div>
+
+      <div class="card" onclick="navigateTo('Page-Replacement','page-replacement')">
+        <h2>Page Replacement</h2>
+        <p>Implement and analyze page replacement algorithms including FIFO, Optimal, LRU, and LFU to understand virtual memory management.</p>
+      </div>
+
+      <div class="card" onclick="navigateTo('DiskScheduling','DiskScheduling')">
+        <h2>Disk Scheduling</h2>
+        <p>Simulate disk scheduling algorithms such as FCFS, SCAN, and SSTF to optimize disk access and reduce seek times.</p>
+      </div>
+
+      <div class="card" onclick="navigateTo('FileAllocation','FileAllocation')">
+        <h2>File Allocation</h2>
+        <p>Examine file allocation strategies including Sequential, Indexed, and Linked allocation to understand how files are stored on disk.</p>
+      </div>
+
+      <div class="card" onclick="navigateTo('Directories','DirectoryStructure')">
+        <h2>Directory Structure</h2>
+        <p>Simulate single-level directory file organization techniques to understand file system hierarchies and access methods.</p>
+      </div>
     </div>
+
+    <footer class="footer">
+      <p>© 2025 Operating Systems Simulator | Educational Platform</p>
+    </footer>
   </div>
 
   <script src="script.js"></script>
