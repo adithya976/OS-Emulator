@@ -18,13 +18,14 @@ header {
     border-radius: 8px;
     margin-bottom: 30px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 150%;
 }
 header h1 {
     font-weight: 600;
     letter-spacing: 0.5px;
 }
 main {
-    max-width: 1200px;
+    font-size: x-large;
     margin: 0 auto;
     background: #fff;
     padding: 30px;
