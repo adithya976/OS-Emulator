@@ -1,5 +1,5 @@
 document.getElementById('startBtn').addEventListener('click', function() {
-    window.location.href = 'index.html'; 
+    window.location.href = 'landing.html'; 
 });
 
 // Add subtle animation to the background shapes
