@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Memory Allocation Algorithms</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Memory Allocation Simulator</h1>
+
+    <label for="blocks">Block Sizes (comma separated)</label>
+    <input type="text" id="blocks" placeholder="e.g. 100,500,200,300,600" />
+
+    <label for="processes">Process Sizes (comma separated)</label>
+    <input type="text" id="processes" placeholder="e.g. 212,417,112,426" />
+
+    <label for="algorithm">Choose Algorithm:</label>
+    <select id="algorithm">
+      <option value="first">First Fit</option>
+      <option value="best">Best Fit</option>
+      <option value="worst">Worst Fit</option>
+      <option value="next">Next Fit</option>
+    </select>
+
+    <button onclick="allocate()">Allocate Memory</button>
+
+    <div id="output"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
