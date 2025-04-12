@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deadlock Management Simulator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div id="initial-setup-form">
+      <h1>Deadlock Management Simulator</h1>
+      
+      <div class="theory-section">
+        <h2>Understanding Deadlock</h2>
+        <p>A deadlock is a situation in which two or more competing actions are waiting for the other to finish, and thus neither ever does. In operating systems, deadlocks occur when processes are granted exclusive access to resources.</p>
+        
+        <h3>Four Necessary Conditions for Deadlock</h3>
+        <ul>
+          <li><strong>Mutual Exclusion:</strong> At least one resource must be held in a non-shareable mode.</li>
+          <li><strong>Hold and Wait:</strong> A process holding resources can request more resources.</li>
+          <li><strong>No Preemption:</strong> Resources cannot be forcibly taken from processes.</li>
+          <li><strong>Circular Wait:</strong> A circular chain of processes exists, each waiting for a resource held by the next.</li>
+        </ul>
+        
+        <h3>Deadlock Strategies</h3>
+        <ul>
+          <li><strong>Deadlock Prevention:</strong> Ensure at least one of the four conditions cannot hold.</li>
+          <li><strong>Deadlock Avoidance:</strong> Make careful resource allocation decisions (Banker's Algorithm).</li>
+          <li><strong>Deadlock Detection:</strong> Allow deadlocks to occur, then detect and recover.</li>
+          <li><strong>Deadlock Ignorance:</strong> Pretend deadlocks never occur (used in many systems).</li>
+        </ul>
+      </div>
+      
+      <div class="setup-form">
+        <div class="form-group">
+          <label for="process-count">Number of Processes:</label>
+          <input type="number" id="process-count" min="1" value="3">
+        </div>
+        <div class="form-group">
+          <label for="resource-count">Number of Resources:</label>
+          <input type="number" id="resource-count" min="1" value="3">
+        </div>
+        <button id="start-simulation" class="btn btn-primary">Start Simulation</button>
+      </div>
+    </div>
+
+    <div id="simulator-container" style="display: none;">
+      <h1>Deadlock Management Simulator</h1>
+      
+      <div class="algorithm-tabs">
+        <button class="tab-btn active" data-tab="avoidance">Deadlock Avoidance</button>
+        <button class="tab-btn" data-tab="detection">Deadlock Detection</button>
+      </div>
+      
+      <div class="tab-content" id="avoidance-tab">
+        <p class="algorithm-description">
+          <strong>Banker's Algorithm</strong> is a deadlock avoidance algorithm that ensures the system never enters an unsafe state where deadlock might occur.
+          It tests each resource request for safety before granting it.
+        </p>
+      </div>
+      
+      <div class="tab-content hidden" id="detection-tab">
+        <p class="algorithm-description">
+          <strong>Deadlock Detection</strong> allows resource allocation without restrictions but periodically checks if deadlock has occurred.
+          If deadlock is detected, recovery actions can be taken.
+        </p>
+      </div>
+      
+      <div id="controls">
+        <button id="add-process" class="btn">Add Process</button>
+        <button id="add-resource" class="btn">Add Resource</button>
+        <button id="check-safe" class="btn btn-primary">Check Safe State</button>
+        <button id="detect-deadlock" class="btn btn-warning">Detect Deadlock</button>
+        <button id="reset" class="btn btn-danger">Reset</button>
+      </div>
+
+      <div id="resource-allocation-table"></div>
+      <div id="request-form"></div>
+      <div id="result-area"></div>
+      <div id="visualization"></div>
+    </div>
+  </div>
+
+  <div id="debug-output" style="display: none; margin-top: 20px; padding: 10px; background-color: #f8f9fa; border: 1px solid #ddd;"></div>
+
+  <script src="deadlock.js"></script>
+  <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+      console.error('JavaScript error:', error);
+      
+      const debugOutput = document.getElementById('debug-output');
+      if (debugOutput) {
+        debugOutput.style.display = 'block';
+        debugOutput.innerHTML += `<p>Error: ${message} at line ${lineno}</p>`;
+      }
+      return false;
+    };
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+      
+      tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          
+          tabContents.forEach(content => content.classList.add('hidden'));
+          
+          const tabId = this.getAttribute('data-tab');
+          document.getElementById(tabId + '-tab').classList.remove('hidden');
+          
+          if (tabId === 'avoidance') {
+            document.getElementById('check-safe').style.display = 'inline-block';
+            document.getElementById('detect-deadlock').style.display = 'none';
+          } else {
+            document.getElementById('check-safe').style.display = 'none';
+            document.getElementById('detect-deadlock').style.display = 'inline-block';
+          }
+        });
+      });
+      
+      const checkSafeBtn = document.getElementById('check-safe');
+      if (checkSafeBtn) {
+        console.log("Check Safe State button found, attaching event listener");
+        checkSafeBtn.addEventListener('click', function() {
+          console.log("Check Safe State button clicked");
+          if (typeof window.runBankersAlgorithmGlobal === 'function') {
+            window.runBankersAlgorithmGlobal();
+          } else {
+            console.error("runBankersAlgorithmGlobal function not found");
+            document.getElementById('result-area').innerHTML = 
+              '<div class="message error">Error: Banker\'s Algorithm function not available. Check the console for errors.</div>';
+          }
+        });
+      }
+      
+      const detectDeadlockBtn = document.getElementById('detect-deadlock');
+      if (detectDeadlockBtn) {
+        console.log("Detect Deadlock button found, attaching event listener");
+        detectDeadlockBtn.addEventListener('click', function() {
+          console.log("Detect Deadlock button clicked");
+          if (typeof window.detectDeadlockGlobal === 'function') {
+            window.detectDeadlockGlobal();
+          } else {
+            console.error("detectDeadlockGlobal function not found");
+            document.getElementById('result-area').innerHTML = 
+              '<div class="message error">Error: Deadlock Detection function not available. Check the console for errors.</div>';
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
