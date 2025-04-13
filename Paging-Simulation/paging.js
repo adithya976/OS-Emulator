@@ -187,7 +187,7 @@ function calculatePhysicalAddress() {
     Process ${processNo}, Page ${pageNo}, Offset ${offset}<br>
     Maps to:<br>
     Frame ${frameNumber}, Physical Address ${physicalAddress}<br>
-    <small>Formula: (Frame × Page Size) + Offset = (${frameNumber} × ${pageSize}) + ${offset} = ${physicalAddress}</small>
+    <small>Formula: (Frame x Page Size) + Offset = (${frameNumber} × ${pageSize}) + ${offset} = ${physicalAddress}</small>
   `;
   result.style.display = 'block';
   
