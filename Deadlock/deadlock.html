@@ -8,6 +8,7 @@
 </head>
 <body>
   <div class="container">
+    <!-- Initial Setup Form -->
     <div id="initial-setup-form">
       <h1>Deadlock Management Simulator</h1>
       
@@ -34,6 +35,13 @@
       
       <div class="setup-form">
         <div class="form-group">
+          <label for="algorithm-type">Algorithm Type:</label>
+          <select id="algorithm-type">
+            <option value="bankers">Banker's Algorithm</option>
+            <option value="rag">Resource Allocation Graph</option>
+          </select>
+        </div>
+        <div class="form-group">
           <label for="process-count">Number of Processes:</label>
           <input type="number" id="process-count" min="1" value="3">
         </div>
@@ -45,8 +53,9 @@
       </div>
     </div>
 
+    <!-- Banker's Algorithm Container -->
     <div id="simulator-container" style="display: none;">
-      <h1>Deadlock Management Simulator</h1>
+      <h1>Banker's Algorithm Simulator</h1>
       
       <div class="algorithm-tabs">
         <button class="tab-btn active" data-tab="avoidance">Deadlock Avoidance</button>
@@ -71,7 +80,7 @@
         <button id="add-process" class="btn">Add Process</button>
         <button id="add-resource" class="btn">Add Resource</button>
         <button id="check-safe" class="btn btn-primary">Check Safe State</button>
-        <button id="detect-deadlock" class="btn btn-warning">Detect Deadlock</button>
+        <button id="detect-deadlock" class="btn btn-warning" style="display: none;">Detect Deadlock</button>
         <button id="reset" class="btn btn-danger">Reset</button>
       </div>
 
@@ -79,6 +88,52 @@
       <div id="request-form"></div>
       <div id="result-area"></div>
       <div id="visualization"></div>
+    </div>
+
+    <!-- Resource Allocation Graph Container -->
+    <div id="rag-container" style="display: none;">
+      <h1>Resource Allocation Graph Simulator</h1>
+      
+      <div class="algorithm-tabs">
+        <button class="tab-btn active" data-tab="rag-avoidance">Deadlock Avoidance</button>
+        <button class="tab-btn" data-tab="rag-detection">Deadlock Detection</button>
+      </div>
+      
+      <div class="tab-content" id="rag-avoidance-tab">
+        <p class="algorithm-description">
+          <strong>RAG-based Avoidance</strong> uses the resource allocation graph with claim edges to test if granting a request would lead to potential deadlock.
+          Safety is determined by checking if a resource allocation would create cycles in the graph.
+        </p>
+      </div>
+      
+      <div class="tab-content hidden" id="rag-detection-tab">
+        <p class="algorithm-description">
+          <strong>RAG-based Detection</strong> looks for cycles in the resource allocation graph that indicate deadlock.
+          If a cycle is found involving both processes and resources, deadlock exists.
+        </p>
+      </div>
+
+      <div id="rag-controls">
+        <button id="add-rag-process" class="btn">Add Process</button>
+        <button id="add-rag-resource" class="btn">Add Resource</button>
+        <button id="add-claim-edge" class="btn">Add Claim Edge</button>
+        <button id="add-request-edge" class="btn">Add Request Edge</button>
+        <button id="add-allocation-edge" class="btn">Add Allocation Edge</button>
+        <button id="check-rag-safe" class="btn btn-primary">Check Safe State</button>
+        <button id="detect-rag-deadlock" class="btn btn-warning" style="display: none;">Detect Deadlock</button>
+        <button id="reset-rag" class="btn btn-danger">Reset</button>
+      </div>
+
+      <div id="rag-canvas-container">
+        <div id="rag-canvas"></div>
+      </div>
+
+      <div id="rag-editor">
+        <div id="rag-edge-list"></div>
+        <div id="rag-edge-form"></div>
+      </div>
+
+      <div id="rag-result-area"></div>
     </div>
   </div>
 
@@ -96,61 +151,6 @@
       }
       return false;
     };
-    
-    document.addEventListener('DOMContentLoaded', function() {
-      const tabButtons = document.querySelectorAll('.tab-btn');
-      const tabContents = document.querySelectorAll('.tab-content');
-      
-      tabButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          tabButtons.forEach(btn => btn.classList.remove('active'));
-          this.classList.add('active');
-          
-          tabContents.forEach(content => content.classList.add('hidden'));
-          
-          const tabId = this.getAttribute('data-tab');
-          document.getElementById(tabId + '-tab').classList.remove('hidden');
-          
-          if (tabId === 'avoidance') {
-            document.getElementById('check-safe').style.display = 'inline-block';
-            document.getElementById('detect-deadlock').style.display = 'none';
-          } else {
-            document.getElementById('check-safe').style.display = 'none';
-            document.getElementById('detect-deadlock').style.display = 'inline-block';
-          }
-        });
-      });
-      
-      const checkSafeBtn = document.getElementById('check-safe');
-      if (checkSafeBtn) {
-        console.log("Check Safe State button found, attaching event listener");
-        checkSafeBtn.addEventListener('click', function() {
-          console.log("Check Safe State button clicked");
-          if (typeof window.runBankersAlgorithmGlobal === 'function') {
-            window.runBankersAlgorithmGlobal();
-          } else {
-            console.error("runBankersAlgorithmGlobal function not found");
-            document.getElementById('result-area').innerHTML = 
-              '<div class="message error">Error: Banker\'s Algorithm function not available. Check the console for errors.</div>';
-          }
-        });
-      }
-      
-      const detectDeadlockBtn = document.getElementById('detect-deadlock');
-      if (detectDeadlockBtn) {
-        console.log("Detect Deadlock button found, attaching event listener");
-        detectDeadlockBtn.addEventListener('click', function() {
-          console.log("Detect Deadlock button clicked");
-          if (typeof window.detectDeadlockGlobal === 'function') {
-            window.detectDeadlockGlobal();
-          } else {
-            console.error("detectDeadlockGlobal function not found");
-            document.getElementById('result-area').innerHTML = 
-              '<div class="message error">Error: Deadlock Detection function not available. Check the console for errors.</div>';
-          }
-        });
-      }
-    });
   </script>
 </body>
 </html>
