@@ -1,0 +1,136 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+main {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Controls */
+.controls {
+    margin-bottom: 1rem;
+}
+
+.controls label {
+    margin-right: 0.5rem;
+}
+
+.controls input {
+    width: 50px;
+    margin-right: 1rem;
+}
+
+.controls button {
+    padding: 0.5rem 1rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.controls button:hover {
+    background-color: #45a049;
+}
+
+/* Simulation Container */
+.simulation-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 80%;
+    margin: 2rem auto;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    background-color: #fff;
+}
+
+/* Producer and Consumer Sections */
+.producer, .consumer {
+    width: 30%;
+    text-align: center;
+}
+
+.producer h2, .consumer h2 {
+    color: #4CAF50;
+}
+
+.buffer {
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    border: 2px dashed #4CAF50;
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #e8f5e9;
+}
+
+.buffer-item {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.buffer-item.empty {
+    background-color: #ccc;
+}
+
+/* History Display */
+#producerHistory, #consumerHistory {
+    margin-top: 1rem;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+/* Buttons */
+button {
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+    background-color: #45a049;
+}
+
+/* Status Display */
+.status {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: #333;
+}
