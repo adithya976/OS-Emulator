@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LRU Approximation Simulator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>LRU Approximation (Second-Chance) Simulator</h1>
+    
+    <label>Enter Page Reference String (space/comma-separated):</label>
+    <input id="pages" type="text" value="2,3,2,1,5,2,4,5,3,2,5,2" />
+
+    <label>Enter Cache Capacity:</label>
+    <input id="capacity" type="number" value="4" />
+
+    <div class="buttons">
+      <button onclick="startSimulation()">Start</button>
+      <button onclick="prevStep()">⏪ Prev</button>
+      <button onclick="nextStep()">Next ⏩</button>
+      <button onclick="resetSimulation()">🔄 Reset</button>
+    </div>
+
+    <div id="output"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
