@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interprocess Communication Simulator</title>
+  <link rel="stylesheet" href="InterProcessCommunication.css">
+</head>
+<body>
+  <div class="container">
+    <div id="initial-setup-form">
+      <h1>Interprocess Communication Simulator</h1>
+      
+      <div class="card introduction-card">
+        <div class="card-header">
+          <h2>Understanding IPC (Interprocess Communication)</h2>
+        </div>
+        <div class="card-body">
+          <p>Interprocess communication (IPC) allows processes to communicate with each other and synchronize their actions. Various mechanisms are provided by the operating system to enable this communication.</p>
+          
+          <div class="highlight-box">
+            <p>IPC mechanisms enable different processes to exchange data, share resources, and coordinate activities efficiently.</p>
+          </div>
+
+          <h3>Communication Modes</h3>
+          <div class="modes-container">
+            <div class="mode-item">
+              <div class="mode-icon full-duplex-icon"></div>
+              <div class="mode-desc">
+                <strong>Full Duplex:</strong> Communication can happen in both directions simultaneously.
+              </div>
+            </div>
+            <div class="mode-item">
+              <div class="mode-icon half-duplex-icon"></div>
+              <div class="mode-desc">
+                <strong>Half Duplex:</strong> Communication can happen in both directions, but only one direction at a time.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card mechanisms-card">
+        <div class="card-header">
+          <h2>IPC Mechanisms</h2>
+        </div>
+        <div class="card-body">
+          <div class="mechanism-grid">
+            <div class="mechanism-item">
+              <div class="mechanism-icon pipe-icon"></div>
+              <h4>Pipes</h4>
+              <p>Unidirectional or bidirectional communication channels between related processes.</p>
+              <div class="mechanism-details">
+                <div class="advantages">
+                  <h5>Advantages</h5>
+                  <ul>
+                    <li>Simple implementation</li>
+                    <li>Built-in flow control</li>
+                    <li>Secure communication</li>
+                  </ul>
+                </div>
+                <div class="disadvantages">
+                  <h5>Disadvantages</h5>
+                  <ul>
+                    <li>Limited to related processes</li>
+                    <li>Fixed buffer size</li>
+                    <li>Local system only</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mechanism-item">
+              <div class="mechanism-icon shm-icon"></div>
+              <h4>Shared Memory</h4>
+              <p>A region of memory that can be accessed by multiple processes for direct data exchange.</p>
+              <div class="mechanism-details">
+                <div class="advantages">
+                  <h5>Advantages</h5>
+                  <ul>
+                    <li>Fastest IPC method</li>
+                    <li>No data copying</li>
+                    <li>Large data transfers</li>
+                  </ul>
+                </div>
+                <div class="disadvantages">
+                  <h5>Disadvantages</h5>
+                  <ul>
+                    <li>Requires synchronization</li>
+                    <li>Complex implementation</li>
+                    <li>Risk of race conditions</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mechanism-item">
+              <div class="mechanism-icon mq-icon"></div>
+              <h4>Message Queues</h4>
+              <p>Standardized queuing system for exchanging data between processes with priority support.</p>
+              <div class="mechanism-details">
+                <div class="advantages">
+                  <h5>Advantages</h5>
+                  <ul>
+                    <li>Asynchronous operation</li>
+                    <li>Priority support</li>
+                    <li>Works with unrelated processes</li>
+                  </ul>
+                </div>
+                <div class="disadvantages">
+                  <h5>Disadvantages</h5>
+                  <ul>
+                    <li>Limited message size</li>
+                    <li>Queue size limits</li>
+                    <li>More system overhead</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card setup-card">
+        <div class="card-header">
+          <h2>Select Simulation</h2>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="ipc-type">IPC Mechanism:</label>
+            <select id="ipc-type">
+              <option value="pipe_full">Pipe Communication (Full Duplex)</option>
+              <option value="pipe_half">Pipe Communication (Half Duplex)</option>
+              <option value="shm_full">Shared Memory (Full Duplex)</option>
+              <option value="shm_half">Shared Memory (Half Duplex)</option>
+              <option value="mq_full">POSIX Message Queue (Full Duplex)</option>
+              <option value="mq_half">POSIX Message Queue (Half Duplex)</option>
+            </select>
+          </div>
+          <button id="start-simulation" class="btn btn-primary">Start Simulation</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="pipe-full-container" class="simulation-container" style="display: none;">
+      <h1>Pipe Communication Simulator (Full Duplex)</h1>
+      <div class="ipc-description">
+        <p>
+          <strong>Full Duplex Pipe Communication</strong> uses two pipes to achieve bidirectional communication. 
+          Both processes can send and receive messages simultaneously.
+        </p>
+        
+        <div class="advantages-disadvantages">
+          <div class="advantages">
+            <h4>Advantages</h4>
+            <ul>
+              <li>Simple to implement with parent-child processes</li>
+              <li>Synchronous communication with built-in flow control</li>
+              <li>No need for explicit synchronization</li>
+              <li>Secure communication channel between related processes</li>
+            </ul>
+          </div>
+          <div class="disadvantages">
+            <h4>Disadvantages</h4>
+            <ul>
+              <li>Limited to related processes (parent-child relationship)</li>
+              <li>Fixed buffer size can cause blocking</li>
+              <li>Cannot be used for inter-host communication</li>
+              <li>Requires two pipes for full-duplex operation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="process-container">
+        <div class="process parent-process">
+          <h2>Parent Process</h2>
+          <div class="process-io">
+            <textarea id="parent-input-full" placeholder="Enter message for child..."></textarea>
+            <button id="parent-send-full" class="btn btn-primary">Send to Child</button>
+            <div class="message-display">
+              <h3>Messages Received:</h3>
+              <div id="parent-received-full" class="received-messages"></div>
+            </div>
+          </div>
+          <div class="pipe-visual">
+            <div class="pipe-write"></div>
+            <div class="pipe-read"></div>
+          </div>
+        </div>
+        
+        <div class="process-diagram">
+          <div class="pipe pipe-parent-to-child">
+            <div class="pipe-label">Parent → Child</div>
+            <div class="message-bubble hidden"></div>
+          </div>
+          <div class="pipe pipe-child-to-parent">
+            <div class="pipe-label">Child → Parent</div>
+            <div class="message-bubble hidden"></div>
+          </div>
+        </div>
+        
+        <div class="process child-process">
+          <h2>Child Process</h2>
+          <div class="process-io">
+            <textarea id="child-input-full" placeholder="Enter message for parent..."></textarea>
+            <button id="child-send-full" class="btn btn-primary">Send to Parent</button>
+            <div class="message-display">
+              <h3>Messages Received:</h3>
+              <div id="child-received-full" class="received-messages"></div>
+            </div>
+          </div>
+          <div class="pipe-visual">
+            <div class="pipe-write"></div>
+            <div class="pipe-read"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="controls">
+        <button id="reset-pipe-full" class="btn btn-danger">Reset</button>
+        <button id="back-to-menu-pipe-full" class="btn">Back to Menu</button>
+        <button id="show-info-pipe-full" class="btn btn-info">Show/Hide Info</button>
+      </div>
+      
+      <div id="pipe-full-result-area"></div>
+    </div>
+    
+    <div id="pipe-half-container" class="simulation-container" style="display: none;">
+      <h1>Pipe Communication Simulator (Half Duplex)</h1>
+      <div class="ipc-description">
+        <p>
+          <strong>Half Duplex Pipe Communication</strong> uses a single pipe for communication in both directions, but only one direction at a time.
+          This simulates a typical walkie-talkie style communication where only one process can "talk" at once.
+        </p>
+        
+        <div class="advantages-disadvantages">
+          <div class="advantages">
+            <h4>Advantages</h4>
+            <ul>
+              <li>Simpler implementation with a single pipe</li>
+              <li>Lower resource usage compared to full-duplex</li>
+              <li>Natural flow control with turn-based communication</li>
+              <li>Easier to reason about message order</li>
+            </ul>
+          </div>
+          <div class="disadvantages">
+            <h4>Disadvantages</h4>
+            <ul>
+              <li>Reduced throughput compared to full-duplex</li>
+              <li>Process must wait for its turn to communicate</li>
+              <li>Requires careful management of communication direction</li>
+              <li>Extra coordination needed to prevent deadlocks</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="process-container">
+        <div class="process parent-process">
+          <h2>Parent Process</h2>
+          <div class="process-io">
+            <textarea id="parent-input-half" placeholder="Enter message for child..."></textarea>
+            <button id="parent-send-half" class="btn btn-primary">Send to Child</button>
+            <div class="message-display">
+              <h3>Messages Received:</h3>
+              <div id="parent-received-half" class="received-messages"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="process-diagram">
+          <div class="pipe pipe-half-duplex">
+            <div class="pipe-label">Half Duplex Channel</div>
+            <div class="direction-indicator">⟷</div>
+            <div class="message-bubble hidden"></div>
+          </div>
+          <div class="current-direction">Current Direction: <span id="direction-status">None</span></div>
+        </div>
+        
+        <div class="process child-process">
+          <h2>Child Process</h2>
+          <div class="process-io">
+            <textarea id="child-input-half" placeholder="Enter message for parent..."></textarea>
+            <button id="child-send-half" class="btn btn-primary">Send to Parent</button>
+            <div class="message-display">
+              <h3>Messages Received:</h3>
+              <div id="child-received-half" class="received-messages"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="controls">
+        <button id="reset-pipe-half" class="btn btn-danger">Reset</button>
+        <button id="back-to-menu-pipe-half" class="btn">Back to Menu</button>
+        <button id="show-info-pipe-half" class="btn btn-info">Show/Hide Info</button>
+      </div>
+      
+      <div id="pipe-half-result-area"></div>
+    </div>
+    
+    <div id="shm-full-container" class="simulation-container" style="display: none;">
+      <h1>Shared Memory Communication Simulator (Full Duplex)</h1>
+      <div class="ipc-description">
+        <p>
+          <strong>Full Duplex Shared Memory Communication</strong> allows processes to communicate by reading and writing to separate shared memory regions simultaneously.
+          In this simulation, we use two shared memory regions to enable bidirectional communication.
+        </p>
+        
+        <div class="advantages-disadvantages">
+          <div class="advantages">
+            <h4>Advantages</h4>
+            <ul>
+              <li>Fastest IPC method with minimal overhead</li>
+              <li>No data copying between kernel and user space</li>
+              <li>Allows for very large data transfers</li>
+              <li>Efficient for frequent communications</li>
+            </ul>
+          </div>
+          <div class="disadvantages">
+            <h4>Disadvantages</h4>
+            <ul>
+              <li>Requires explicit synchronization mechanisms</li>
+              <li>More complex to implement correctly</li>
+              <li>Risk of race conditions and data corruption</li>
+              <li>Limited to processes on the same host</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="process-container">
+        <div class="process parent-process">
+          <h2>Parent Process</h2>
+          <div class="process-io">
+            <textarea id="parent-shm-input-full" placeholder="Enter message for child..."></textarea>
+            <button id="parent-shm-send-full" class="btn btn-primary">Send to Child</button>
+            <div class="message-display">
+              <h3>Messages Received:</h3>
+              <div id="parent-shm-received-full" class="received-messages"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="shared-memory-diagram">
+          <div class="shared-memory parent-memory">
+            <div class="memory-label">Parent Write Region</div>
+            <div class="memory-content" id="parent-memory-content-full"></div>
+          </div>
+          <div class="shared-memory child-memory">
+            <div class="memory-label">Child Write Region</div>
+            <div class="memory-content" id="child-memory-content-full"></div>
+          </div>
+        </div>
+        
+        <div class="process child-process">
+          <h2>Child Process</h2>
+          <div class="process-io">
+            <textarea id="child-shm-input-full" placeholder="Enter message for parent..."></textarea>
+            <button id="child-shm-send-full" class="btn btn-primary">Send to Parent</button>
+            <div class="message-display">
+              <h3>Messages Received:</h3>
+              <div id="child-shm-received-full" class="received-messages"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="controls">
+        <button id="reset-shm-full" class="btn btn-danger">Reset</button>
+        <button id="back-to-menu-shm-full" class="btn">Back to Menu</button>
+        <button id="show-info-shm-full" class="btn btn-info">Show/Hide Info</button>
+      </div>
+      
+      <div id="shm-full-result-area"></div>
+    </div>
+
+    <div id="shm-half-container" class="simulation-container" style="display: none;">
+      <h1>Shared Memory Communication Simulator (Half Duplex)</h1>
+      <div class="ipc-description">
+        <p>
+          <strong>Half Duplex Shared Memory Communication</strong> allows processes to communicate through a single shared memory region,
+          but only one process can write to it at a time. The other process must wait until it's done reading.
+        </p>
+        
+        <div class="advantages-disadvantages">
+          <div class="advantages">
+            <h4>Advantages</h4>
+            <ul>
+              <li>Lower memory usage with single memory region</li>
+              <li>Simpler synchronization compared to full-duplex</li>
+              <li>Reduced risk of race conditions</li>
+              <li>Still provides high-speed data transfer</li>
+            </ul>
+          </div>
+          <div class="disadvantages">
+            <h4>Disadvantages</h4>
+            <ul>
+              <li>Reduced throughput due to turn-based access</li>
+              <li>Blocking behavior limits concurrency</li>
+              <li>Still requires synchronization primitives</li>
+              <li>Not suitable for applications requiring constant communication</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="process-container">
+        <div class="process parent-process">
+          <h2>Parent Process</h2>
+          <div class="process-io">
+            <textarea id="parent-shm-input-half" placeholder="Enter message for child..."></textarea>
+            <button id="parent-shm-send-half" class="btn btn-primary">Send to Child</button>
+            <div class="message-display">
+              <h3>Messages Received:</h3>
+              <div id="parent-shm-received-half" class="received-messages"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="shared-memory-diagram">
+          <div class="shared-memory shared-half-memory">
+            <div class="memory-label">Shared Memory Region</div>
+            <div class="memory-content" id="shared-memory-content-half"></div>
+            <div class="memory-status">Status: <span id="memory-status">Available</span></div>
+          </div>
+        </div>
+        
+        <div class="process child-process">
+          <h2>Child Process</h2>
+          <div class="process-io">
+            <textarea id="child-shm-input-half" placeholder="Enter message for parent..."></textarea>
+            <button id="child-shm-send-half" class="btn btn-primary">Send to Parent</button>
+            <div class="message-display">
+              <h3>Messages Received:</h3>
+              <div id="child-shm-received-half" class="received-messages"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="controls">
+        <button id="reset-shm-half" class="btn btn-danger">Reset</button>
+        <button id="back-to-menu-shm-half" class="btn">Back to Menu</button>
+        <button id="show-info-shm-half" class="btn btn-info">Show/Hide Info</button>
+      </div>
+      
+      <div id="shm-half-result-area"></div>
+    </div>
+
+    <div id="mq-full-container" class="simulation-container" style="display: none;">
+      <h1>POSIX Message Queue Simulator (Full Duplex)</h1>
+      <div class="ipc-description">
+        <p>
+          <strong>Full Duplex POSIX Message Queue Communication</strong> uses two message queues to achieve bidirectional communication.
+          Each process has its own queue for receiving messages, providing asynchronous communication.
+        </p>
+        
+        <div class="advantages-disadvantages">
+          <div class="advantages">
+            <h4>Advantages</h4>
+            <ul>
+              <li>Asynchronous communication with automatic buffering</li>
+              <li>Support for message prioritization</li>
+              <li>Can work between unrelated processes</li>
+              <li>Notification mechanisms (signals, threads)</li>
+            </ul>
+          </div>
+          <div class="disadvantages">
+            <h4>Disadvantages</h4>
+            <ul>
+              <li>Limited message size (system-dependent)</li>
+              <li>Queue size limits may cause blocking or message loss</li>
+              <li>More system overhead than pipes or shared memory</li>
+              <li>Requires two queues for full-duplex operation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="process-container">
+        <div class="process parent-process">
+          <h2>Parent Process</h2>
+          <div class="process-io">
+            <div class="message-form">
+              <textarea id="parent-mq-input-full" placeholder="Enter message for child..."></textarea>
+              <div class="message-options">
+                <label>Priority: 
+                  <select id="parent-mq-priority-full">
+                    <option value="0">0 (Low)</option>
+                    <option value="1" selected>1 (Normal)</option>
+                    <option value="2">2 (High)</option>
+                  </select>
+                </label>
+              </div>
+              <button id="parent-mq-send-full" class="btn btn-primary">Send to Child</button>
+            </div>
+            <div class="message-display">
+              <h3>Messages Received:</h3>
+              <div id="parent-mq-received-full" class="received-messages"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="message-queue-diagram">
+          <div class="queue-container">
+            <div class="queue-label">Parent's Queue</div>
+            <div class="queue-visual" id="parent-queue-full"></div>
+            <div class="queue-animation queue-child-to-parent"></div>
+          </div>
+          <div class="queue-container">
+            <div class="queue-label">Child's Queue</div>
+            <div class="queue-visual" id="child-queue-full"></div>
+            <div class="queue-animation queue-parent-to-child"></div>
+          </div>
+        </div>
+        
+        <div class="process child-process">
+          <h2>Child Process</h2>
+          <div class="process-io">
+            <div class="message-form">
+              <textarea id="child-mq-input-full" placeholder="Enter message for parent..."></textarea>
+              <div class="message-options">
+                <label>Priority: 
+                  <select id="child-mq-priority-full">
+                    <option value="0">0 (Low)</option>
+                    <option value="1" selected>1 (Normal)</option>
+                    <option value="2">2 (High)</option>
+                  </select>
+                </label>
+              </div>
+              <button id="child-mq-send-full" class="btn btn-primary">Send to Parent</button>
+            </div>
+            <div class="message-display">
+              <h3>Messages Received:</h3>
+              <div id="child-mq-received-full" class="received-messages"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="controls">
+        <button id="reset-mq-full" class="btn btn-danger">Reset</button>
+        <button id="back-to-menu-mq-full" class="btn">Back to Menu</button>
+        <button id="show-info-mq-full" class="btn btn-info">Show/Hide Info</button>
+      </div>
+      
+      <div id="mq-full-result-area"></div>
+    </div>
+    
+    <div id="mq-half-container" class="simulation-container" style="display: none;">
+      <h1>POSIX Message Queue Simulator (Half Duplex)</h1>
+      <div class="ipc-description">
+        <p>
+          <strong>Half Duplex POSIX Message Queue Communication</strong> uses a single message queue for bidirectional communication,
+          but only one direction is active at a time. After a message is sent, the sender must wait for a response before sending again.
+        </p>
+        
+        <div class="advantages-disadvantages">
+          <div class="advantages">
+            <h4>Advantages</h4>
+            <ul>
+              <li>Single queue reduces resource usage</li>
+              <li>Simplified message handling and tracking</li>
+              <li>Natural implementation of request-response patterns</li>
+              <li>Easier to maintain message order</li>
+            </ul>
+          </div>
+          <div class="disadvantages">
+            <h4>Disadvantages</h4>
+            <ul>
+              <li>Lower throughput than full-duplex</li>
+              <li>Requires explicit turn management</li>
+              <li>Can introduce latency in communication</li>
+              <li>More complex error recovery</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="process-container">
+        <div class="process parent-process">
+          <h2>Parent Process</h2>
+          <div class="process-io">
+            <div class="message-form">
+              <textarea id="parent-mq-input-half" placeholder="Enter message for child..."></textarea>
+              <div class="message-options">
+                <label>Message Type: 
+                  <select id="parent-mq-type-half">
+                    <option value="request">Request</option>
+                    <option value="response">Response</option>
+                  </select>
+                </label>
+              </div>
+              <button id="parent-mq-send-half" class="btn btn-primary">Send to Child</button>
+            </div>
+            <div class="message-display">
+              <h3>Messages Received:</h3>
+              <div id="parent-mq-received-half" class="received-messages"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="message-queue-diagram">
+          <div class="queue-container shared-queue">
+            <div class="queue-label">Shared Message Queue</div>
+            <div class="queue-visual" id="shared-queue-half"></div>
+            <div class="queue-animation queue-shared"></div>
+            <div class="communication-state">
+              <div class="turn-indicator">Current Turn: <span id="current-turn-half">Parent</span></div>
+              <div class="conversation-state">State: <span id="conversation-state-half">Waiting for Parent</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="process child-process">
+          <h2>Child Process</h2>
+          <div class="process-io">
+            <div class="message-form">
+              <textarea id="child-mq-input-half" placeholder="Enter message for parent..."></textarea>
+              <div class="message-options">
+                <label>Message Type: 
+                  <select id="child-mq-type-half">
+                    <option value="request">Request</option>
+                    <option value="response" selected>Response</option>
+                  </select>
+                </label>
+              </div>
+              <button id="child-mq-send-half" class="btn btn-primary">Send to Parent</button>
+            </div>
+            <div class="message-display">
+              <h3>Messages Received:</h3>
+              <div id="child-mq-received-half" class="received-messages"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="controls">
+        <button id="reset-mq-half" class="btn btn-danger">Reset</button>
+        <button id="back-to-menu-mq-half" class="btn">Back to Menu</button>
+        <button id="show-info-mq-half" class="btn btn-info">Show/Hide Info</button>
+      </div>
+      
+      <div id="mq-half-result-area"></div>
+    </div>
+  </div>
+
+  <div id="debug-output" style="display: none; margin-top: 20px; padding: 10px; background-color: #f8f9fa; border: 1px solid #ddd;"></div>
+
+  <script src="InterProcessCommunication.js"></script>
+  <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+      console.error('JavaScript error:', error);
+      
+      const debugOutput = document.getElementById('debug-output');
+      if (debugOutput) {
+        debugOutput.style.display = 'block';
+        debugOutput.innerHTML += `<p>Error: ${message} at line ${lineno}</p>`;
+      }
+      return false;
+    };
+  </script>
+</body>
+</html>
