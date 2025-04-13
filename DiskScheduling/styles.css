@@ -1,0 +1,245 @@
+/* GENERAL RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* HEADER */
+header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* NAVIGATION BUTTONS */
+nav {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.algorithm-selection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.algorithm-btn {
+    padding: 10px 15px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.algorithm-btn:hover {
+    background-color: #2980b9;
+}
+
+.algorithm-btn.active {
+    background-color: #2c3e50;
+}
+
+/* LAYOUT */
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0 20px;
+    gap: 20px;
+}
+
+/* INPUT SECTION */
+.input-section {
+    flex: 1;
+    min-width: 280px;
+    max-width: 350px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+}
+
+input[type="number"],
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* BUTTONS */
+#run-algorithm,
+#compare-algorithms,
+#reset {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#compare-algorithms {
+    background-color: #8e44ad;
+}
+
+#reset {
+    background-color: #e74c3c;
+}
+
+#run-algorithm:hover {
+    background-color: #1e8449;
+}
+
+#compare-algorithms:hover {
+    background-color: #732d91;
+}
+
+#reset:hover {
+    background-color: #c0392b;
+}
+
+/* VISUALIZATION */
+.visualization-section {
+    flex: 2;
+    min-width: 400px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.disk-visualization {
+    position: relative;
+    height: 200px;
+    margin-bottom: 20px;
+    background-color: #ecf0f1;
+    border-radius: 6px;
+    overflow: hidden;
+    padding: 10px;
+}
+
+.disk-track {
+    position: relative;
+    height: 100px;
+    background: #dfe6e9;
+    border: 1px solid #ccc;
+    margin-top: 20px;
+}
+
+.disk-head {
+    position: absolute;
+    top: 0;
+    width: 10px;
+    height: 100%;
+    background-color: #e67e22;
+    transition: left 0.4s ease;
+}
+
+.request-point {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #2980b9;
+    border-radius: 50%;
+    transform: translateX(-50%);
+}
+
+.request-point.processed {
+    background-color: #2ecc71;
+}
+
+.request-point.active {
+    background-color: #f1c40f;
+}
+
+.seek-animation {
+    animation: blink 0.5s alternate 3;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
+.algorithm-steps {
+    max-height: 150px;
+    overflow-y: auto;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* INFO SECTION */
+.info-section {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* MODAL */
+.comparison-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 10;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 700px;
+    width: 100%;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* FOOTER */
+footer {
+    margin-top: 40px;
+    text-align: center;
+    padding: 20px;
+    background-color: #2c3e50;
+    color: white;
+}
+
+.credits p {
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
