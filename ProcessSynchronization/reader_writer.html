@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reader-Writer Problem Simulator</title>
+    <link rel="stylesheet" href="reader_writer.css">
+</head>
+<body>
+    <header>
+        <h1>Reader-Writer Problem Simulator</h1>
+    </header>
+    <main>
+        <div class="controls">
+            <label for="numReaders">Number of Readers:</label>
+            <input type="number" id="numReaders" min="1" value="2">
+            <label for="numWriters">Number of Writers:</label>
+            <input type="number" id="numWriters" min="1" value="1">
+            <button id="updateProcesses">Update Processes</button>
+        </div>
+        <div class="simulation-container">
+            <div class="readers">
+                <h2>Readers</h2>
+                <div id="readerButtons">
+                    <!-- Reader buttons will be dynamically added -->
+                </div>
+            </div>
+            <div class="access-status">
+                <h2>Access Status</h2>
+                <table>
+                    <tr>
+                        <th>Status</th>
+                        <td id="roomStatus">Empty</td>
+                    </tr>
+                    <tr>
+                        <th>Occupants</th>
+                        <td id="roomOccupants">None</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="writers">
+                <h2>Writers</h2>
+                <div id="writerButtons">
+                    <!-- Writer buttons will be dynamically added -->
+                </div>
+            </div>
+        </div>
+        <section class="description">
+            <h2>About the Reader-Writer Problem</h2>
+            <ul>
+                <li>The Reader-Writer Problem is a classic synchronization problem in operating systems.</li>
+                <li>It involves a shared resource (e.g., a database) that can be accessed by multiple readers or a single writer at a time.</li>
+                <li>Readers can access the resource simultaneously without conflicts.</li>
+                <li>Writers require exclusive access to the resource to prevent data inconsistency.</li>
+                <li>The problem ensures that:
+                    <ul>
+                        <li>Readers do not block other readers.</li>
+                        <li>Writers have exclusive access to the resource when writing.</li>
+                        <li>Deadlocks and starvation are avoided.</li>
+                    </ul>
+                </li>
+                <li>This simulator demonstrates the behavior of readers and writers in a shared environment.</li>
+            </ul>
+        </section>
+    </main>
+    <script src="reader_writer.js"></script>
+</body>
+</html>
