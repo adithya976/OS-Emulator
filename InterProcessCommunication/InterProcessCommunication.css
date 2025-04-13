@@ -112,11 +112,13 @@ body {
   }
   
   .full-duplex-icon {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%233498db" d="M9.9 19.2L1.8 11 9.9 2.8l1.4 1.4L4.8 11l6.5 6.8-1.4 1.4zm4.2 0l-1.4-1.4 6.5-6.8-6.5-6.8 1.4-1.4 8.1 8.2-8.1 8.2z"/></svg>');
+    background-size: contain;
   }
-  
   .half-duplex-icon {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%23e74c3c" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>');
+    background-size: contain;
   }
-  
   
   .mechanisms-card {
     border-left: 5px solid #e74c3c;
@@ -152,19 +154,20 @@ body {
   }
   
   .pipe-icon {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%233498db" d="M4 15v-2h16v2H4zm0-4V9h16v2H4z"/></svg>');
+    background-size: contain;
   }
   
   .shm-icon {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%232ecc71" d="M6 2h12v2H6V2zm0 18h12v2H6v-2zm12-9a3 3 0 100-6 3 3 0 000 6zm-9 4a3 3 0 100-6 3 3 0 000 6z"/></svg>');
+    background-size: contain;
   }
   
   .mq-icon {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="%23e74c3c" d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>');
+    background-size: contain;
   }
   
-  .socket-icon {
-  }
-  
-  .signal-icon {
-  }
   
   .mechanism-item h4 {
     margin-top: 0;
@@ -852,3 +855,94 @@ body {
     font-size: 13px;
     margin-bottom: 5px;
   }
+  /* Add to your InterProcessCommunication.css file */
+  .message-bubble {
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    transition: transform 1s ease-in-out;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 2px;
+    color: white;
+    position: relative;
+  }
+
+.parent-turn {
+  color: #007bff;
+  font-weight: bold;
+}
+
+.child-turn {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.parent-to-child-half {
+  background-color: #007bff;
+  color: white;
+}
+
+.child-to-parent-half {
+  background-color: #dc3545;
+  color: white;
+}
+.queue-parent-to-child, .queue-child-to-parent, .queue-shared {
+  height: 10px;
+  background-color: #ccc;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out, background-color 0.8s ease-in-out;
+  margin: 15px 0;
+  border-radius: 5px;
+}
+
+
+.queue-animation {
+  height: 10px;
+  background-color: #ccc;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+}
+.pipe-half-duplex {
+  width: 100%;
+  height: 40px;
+  background-color: #f8f9fa;
+  border: 2px solid #6c757d;
+  border-radius: 20px;
+  position: relative;
+  margin: 30px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.active-direction {
+  font-weight: bold;
+  background-color: rgba(0, 123, 255, 0.1);
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 123, 255, 0.2);
+}
+#direction-status {
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-top: 10px;
+}
+.message-preview-parent {
+  color: white;
+  background-color: #007bff;
+}
+
+.message-preview-child {
+  color: white;
+  background-color: #dc3545;
+}
