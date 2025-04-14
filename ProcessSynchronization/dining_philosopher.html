@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dining Philosophers Simulator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        .control-panel {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .tables-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .table {
+            flex: 1;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 0 10px;
+        }
+        
+        .table h2 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+        }
+        
+        .table-content {
+            min-height: 100px;
+        }
+        
+        .philosopher-item {
+            padding: 8px;
+            margin: 5px 0;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+        
+        .dining-area {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            background-color: #fff;
+            border-radius: 50%;
+            margin: 0 auto;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .table-center {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background-color: #8B4513;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .philosopher {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .chopstick {
+            position: absolute;
+            width: 10px;
+            height: 60px;
+            background-color: #FFC107;
+            border-radius: 3px;
+            transform-origin: center 0;
+        }
+        
+        .chopstick.in-use {
+            background-color: #FF5722;
+        }
+        
+        .deadlock-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 0, 0, 0.8);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 8px;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 100;
+            display: none;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 60px;
+        }
+        
+        .philosopher.thinking {
+            background-color: #2196F3;
+        }
+        
+        .philosopher.eating {
+            background-color: #4CAF50;
+        }
+        
+        .philosopher.hungry {
+            background-color: #FF9800;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .thinking-color { background-color: #2196F3; }
+        .eating-color { background-color: #4CAF50; }
+        .hungry-color { background-color: #FF9800; }
+        .chopstick-available { background-color: #FFC107; width: 10px; height: 20px; border-radius: 3px; }
+        .chopstick-used { background-color: #FF5722; width: 10px; height: 20px; border-radius: 3px; }
+        
+        .chopstick-label {
+            position: absolute;
+            font-size: 10px;
+            color: #666;
+            font-weight: bold;
+        }
+        
+        .holder-label {
+            position: absolute;
+            font-size: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 2px 4px;
+            border-radius: 3px;
+            display: none;
+        }
+        
+        .holder-label.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dining Philosophers Simulator</h1>
+    
+    <div class="control-panel">
+        <div>
+            <label for="philosophers-count">Number of Philosophers:</label>
+            <input type="number" id="philosophers-count" min="2" max="10" value="5">
+            <button id="update-count">Update</button>
+            <button id="reset">Reset Simulation</button>
+        </div>
+    </div>
+    
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-color thinking-color"></div>
+            <span>Thinking</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color eating-color"></div>
+            <span>Eating</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color hungry-color"></div>
+            <span>Hungry</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color chopstick-available"></div>
+            <span>Available Chopstick</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color chopstick-used"></div>
+            <span>In-Use Chopstick</span>
+        </div>
+    </div>
+    
+    <div class="dining-area">
+        <div class="table-center"></div>
+        <!-- Philosophers and chopsticks will be added dynamically -->
+    </div>
+    
+    <div class="tables-container">
+        <div class="table">
+            <h2>Thinking Philosophers</h2>
+            <div id="thinking-table" class="table-content"></div>
+        </div>
+        <div class="table">
+            <h2>Eating Philosophers</h2>
+            <div id="eating-table" class="table-content"></div>
+        </div>
+    </div>
+    
+    <div class="deadlock-message">DEADLOCK DETECTED!</div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configuration
+            let philosophersCount = 5;
+            let philosophers = [];
+            let chopsticks = [];
+            
+            // State constants
+            const THINKING = 'thinking';
+            const HUNGRY = 'hungry';
+            const EATING = 'eating';
+            
+            // Elements
+            const diningArea = document.querySelector('.dining-area');
+            const thinkingTable = document.getElementById('thinking-table');
+            const eatingTable = document.getElementById('eating-table');
+            const deadlockMessage = document.querySelector('.deadlock-message');
+            const updateCountBtn = document.getElementById('update-count');
+            const resetBtn = document.getElementById('reset');
+            const philosophersCountInput = document.getElementById('philosophers-count');
+            
+            // Philosopher class
+            class Philosopher {
+                constructor(id) {
+                    this.id = id;
+                    this.state = THINKING;
+                    // Fix: Each philosopher picks up the chopstick to their right (id) and left ((id-1) mod n)
+                    this.rightChopstick = id;
+                    this.leftChopstick = (id - 1 + philosophersCount) % philosophersCount;
+                    this.hasLeftChopstick = false;
+                    this.hasRightChopstick = false;
+                    this.element = null;
+                    this.hungryTime = 0;
+                }
+                
+                pickupChopsticks() {
+                    if (this.state !== HUNGRY) return false;
+                    
+                    // Try to pick up left chopstick
+                    if (!this.hasLeftChopstick && !chopsticks[this.leftChopstick].inUse) {
+                        chopsticks[this.leftChopstick].inUse = true;
+                        chopsticks[this.leftChopstick].usedBy = this.id;
+                        this.hasLeftChopstick = true;
+                        updateChopstickUI(this.leftChopstick);
+                    }
+                    
+                    // Try to pick up right chopstick
+                    if (!this.hasRightChopstick && !chopsticks[this.rightChopstick].inUse) {
+                        chopsticks[this.rightChopstick].inUse = true;
+                        chopsticks[this.rightChopstick].usedBy = this.id;
+                        this.hasRightChopstick = true;
+                        updateChopstickUI(this.rightChopstick);
+                    }
+                    
+                    // If both chopsticks are acquired, start eating
+                    if (this.hasLeftChopstick && this.hasRightChopstick) {
+                        this.state = EATING;
+                        this.hungryTime = 0;
+                        updatePhilosopherUI(this.id);
+                        updateTables();
+                        return true;
+                    }
+                    
+                    return false;
+                }
+                
+                releaseChopsticks() {
+                    if (this.state !== EATING) return;
+                    
+                    // Release both chopsticks
+                    if (this.hasLeftChopstick) {
+                        chopsticks[this.leftChopstick].inUse = false;
+                        chopsticks[this.leftChopstick].usedBy = null;
+                        this.hasLeftChopstick = false;
+                        updateChopstickUI(this.leftChopstick);
+                    }
+                    
+                    if (this.hasRightChopstick) {
+                        chopsticks[this.rightChopstick].inUse = false;
+                        chopsticks[this.rightChopstick].usedBy = null;
+                        this.hasRightChopstick = false;
+                        updateChopstickUI(this.rightChopstick);
+                    }
+                    
+                    // Start thinking again
+                    this.state = THINKING;
+                    updatePhilosopherUI(this.id);
+                    updateTables();
+                }
+                
+                startThinking() {
+                    // First release any chopsticks if eating
+                    if (this.state === EATING) {
+                        this.releaseChopsticks();
+                    }
+                    
+                    this.state = THINKING;
+                    updatePhilosopherUI(this.id);
+                    updateTables();
+                }
+                
+                getHungry() {
+                    if (this.state === EATING) {
+                        this.releaseChopsticks();
+                    }
+                    
+                    this.state = HUNGRY;
+                    updatePhilosopherUI(this.id);
+                    updateTables();
+                }
+            }
+            
+            // Initialize chopsticks and philosophers
+            function initialize() {
+                // Clear previous elements
+                while (diningArea.children.length > 1) {
+                    diningArea.removeChild(diningArea.lastChild);
+                }
+                
+                philosophers = [];
+                chopsticks = [];
+                
+                // Create chopsticks
+                for (let i = 0; i < philosophersCount; i++) {
+                    chopsticks.push({
+                        id: i,
+                        inUse: false,
+                        usedBy: null,
+                        element: null,
+                        holderLabel: null
+                    });
+                }
+                
+                // Create philosophers
+                for (let i = 0; i < philosophersCount; i++) {
+                    philosophers.push(new Philosopher(i));
+                }
+                
+                // Position philosophers and chopsticks in a circle
+                const radius = 150;
+                const centerX = 200;
+                const centerY = 200;
+                
+                for (let i = 0; i < philosophersCount; i++) {
+                    const angle = (2 * Math.PI * i) / philosophersCount;
+                    const x = centerX + radius * Math.cos(angle);
+                    const y = centerY + radius * Math.sin(angle);
+                    
+                    // Create philosopher element
+                    const philosopherEl = document.createElement('div');
+                    philosopherEl.className = 'philosopher thinking';
+                    philosopherEl.textContent = i + 1;
+                    philosopherEl.style.left = `${x - 25}px`;
+                    philosopherEl.style.top = `${y - 25}px`;
+                    philosophers[i].element = philosopherEl;
+                    
+                    // Add event listener for changing state
+                    philosopherEl.addEventListener('click', function() {
+                        togglePhilosopherState(i);
+                    });
+                    
+                    diningArea.appendChild(philosopherEl);
+                }
+                
+                // Now place chopsticks between philosophers
+                for (let i = 0; i < philosophersCount; i++) {
+                    const angle = (2 * Math.PI * i) / philosophersCount + (Math.PI / philosophersCount);
+                    const chopstickRadius = radius - 30;
+                    const chopstickX = centerX + chopstickRadius * Math.cos(angle);
+                    const chopstickY = centerY + chopstickRadius * Math.sin(angle);
+                    
+                    const chopstickEl = document.createElement('div');
+                    chopstickEl.className = 'chopstick';
+                    chopstickEl.style.left = `${chopstickX - 5}px`;
+                    chopstickEl.style.top = `${chopstickY}px`;
+                    // Point the chopstick toward the center
+                    const rotationAngle = angle + Math.PI/2;
+                    chopstickEl.style.transform = `rotate(${rotationAngle}rad)`;
+                    chopsticks[i].element = chopstickEl;
+                    
+                    // Add chopstick label
+                    const labelEl = document.createElement('div');
+                    labelEl.className = 'chopstick-label';
+                    labelEl.textContent = `C${i+1}`;
+                    labelEl.style.left = `${chopstickX - 15}px`;
+                    labelEl.style.top = `${chopstickY - 15}px`;
+                    
+                    // Add holder label
+                    const holderLabelEl = document.createElement('div');
+                    holderLabelEl.className = 'holder-label';
+                    holderLabelEl.style.left = `${chopstickX + 10}px`;
+                    holderLabelEl.style.top = `${chopstickY - 5}px`;
+                    chopsticks[i].holderLabel = holderLabelEl;
+                    
+                    diningArea.appendChild(chopstickEl);
+                    diningArea.appendChild(labelEl);
+                    diningArea.appendChild(holderLabelEl);
+                }
+                
+                updateTables();
+            }
+            
+            // Toggle philosopher state when clicked
+            function togglePhilosopherState(id) {
+                const philosopher = philosophers[id];
+                
+                switch (philosopher.state) {
+                    case THINKING:
+                        philosopher.getHungry();
+                        break;
+                    case HUNGRY:
+                        philosopher.pickupChopsticks();
+                        if (philosopher.state !== EATING) {
+                            // If couldn't start eating, try to think instead
+                            philosopher.startThinking();
+                        }
+                        break;
+                    case EATING:
+                        philosopher.releaseChopsticks();
+                        break;
+                }
+                
+                checkForDeadlock();
+            }
+            
+            // Update UI for philosopher
+            function updatePhilosopherUI(id) {
+                const philosopher = philosophers[id];
+                const element = philosopher.element;
+                
+                // Remove all state classes
+                element.classList.remove(THINKING, HUNGRY, EATING);
+                
+                // Add current state class
+                element.classList.add(philosopher.state);
+            }
+            
+            // Update UI for chopstick
+            function updateChopstickUI(id) {
+                const chopstick = chopsticks[id];
+                const element = chopstick.element;
+                const holderLabel = chopstick.holderLabel;
+                
+                if (chopstick.inUse) {
+                    element.classList.add('in-use');
+                    holderLabel.textContent = `Held by P${chopstick.usedBy + 1}`;
+                    holderLabel.classList.add('visible');
+                } else {
+                    element.classList.remove('in-use');
+                    holderLabel.classList.remove('visible');
+                }
+            }
+            
+            // Update tables with philosophers
+            function updateTables() {
+                thinkingTable.innerHTML = '';
+                eatingTable.innerHTML = '';
+                
+                philosophers.forEach(philosopher => {
+                    const item = document.createElement('div');
+                    item.className = 'philosopher-item';
+                    item.textContent = `Philosopher ${philosopher.id + 1}`;
+                    
+                    if (philosopher.state === THINKING) {
+                        thinkingTable.appendChild(item);
+                    } else if (philosopher.state === EATING) {
+                        eatingTable.appendChild(item);
+                    }
+                });
+            }
+            
+            // Check for deadlock (all philosophers hungry and have one chopstick)
+            function checkForDeadlock() {
+                let potentialDeadlock = true;
+                let allHaveOneChopstick = true;
+                
+                // Check if all philosophers are hungry
+                for (let i = 0; i < philosophers.length; i++) {
+                    const philosopher = philosophers[i];
+                    
+                    // If any philosopher is not hungry or has no chopstick or has both chopsticks, no deadlock
+                    if (philosopher.state !== HUNGRY) {
+                        potentialDeadlock = false;
+                        break;
+                    }
+                    
+                    // Check if all hungry philosophers have exactly one chopstick
+                    const hasExactlyOneChopstick = 
+                        (philosopher.hasLeftChopstick && !philosopher.hasRightChopstick) || 
+                        (!philosopher.hasLeftChopstick && philosopher.hasRightChopstick);
+                    
+                    if (!hasExactlyOneChopstick) {
+                        allHaveOneChopstick = false;
+                        break;
+                    }
+                }
+                
+                // For a classic deadlock, all philosophers must be hungry and have exactly one chopstick
+                if (potentialDeadlock && allHaveOneChopstick) {
+                    showDeadlockMessage();
+                } else {
+                    hideDeadlockMessage();
+                }
+            }
+            
+            // Show deadlock message
+            function showDeadlockMessage() {
+                deadlockMessage.style.display = 'block';
+                setTimeout(() => {
+                    hideDeadlockMessage();
+                }, 3000);
+            }
+            
+            // Hide deadlock message
+            function hideDeadlockMessage() {
+                deadlockMessage.style.display = 'none';
+            }
+            
+            // Reset simulation
+            function resetSimulation() {
+                hideDeadlockMessage();
+                
+                philosophers.forEach(philosopher => {
+                    philosopher.state = THINKING;
+                    philosopher.hasLeftChopstick = false;
+                    philosopher.hasRightChopstick = false;
+                    updatePhilosopherUI(philosopher.id);
+                });
+                
+                chopsticks.forEach(chopstick => {
+                    chopstick.inUse = false;
+                    chopstick.usedBy = null;
+                    updateChopstickUI(chopstick.id);
+                });
+                
+                updateTables();
+            }
+            
+            // Update the number of philosophers
+            function updatePhilosophersCount() {
+                const newCount = parseInt(philosophersCountInput.value);
+                if (newCount >= 2 && newCount <= 10) {
+                    philosophersCount = newCount;
+                    initialize();
+                } else {
+                    alert('Please enter a number between 2 and 10');
+                    philosophersCountInput.value = philosophersCount;
+                }
+            }
+            
+            // Event listeners
+            updateCountBtn.addEventListener('click', updatePhilosophersCount);
+            resetBtn.addEventListener('click', resetSimulation);
+            
+            // Initialize the simulation
+            initialize();
+        });
+    </script>
+</body>
+</html>
