@@ -3,27 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LRU Approximation Simulator</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Second-Chance (LRU Approximation)</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>LRU Approximation (Second-Chance) Simulator</h1>
-    
-    <label>Enter Page Reference String (space/comma-separated):</label>
-    <input id="pages" type="text" value="2,3,2,1,5,2,4,5,3,2,5,2" />
+    <h1>Second-Chance (LRU Approximation) Simulator</h1>
 
-    <label>Enter Cache Capacity:</label>
-    <input id="capacity" type="number" value="4" />
+    <p class="description">
+      This simulator demonstrates the <strong>Second-Chance (Clock)</strong> algorithm, which approximates LRU using a FIFO queue and a reference bit.
+      Each page gets a "second chance" if its bit is 1. The algorithm rotates the queue until a page with bit 0 is found and replaced.
+    </p>
 
-    <div class="buttons">
-      <button onclick="startSimulation()">Start</button>
-      <button onclick="prevStep()">⏪ Prev</button>
-      <button onclick="nextStep()">Next ⏩</button>
-      <button onclick="resetSimulation()">🔄 Reset</button>
+    <div class="input-section">
+      <label>Page Reference String (space/comma separated)</label>
+      <input id="pages" type="text" value="2,3,2,1,5,2,4,5,3,2,5,2" />
+
+      <label>Cache Capacity</label>
+      <input id="capacity" type="number" value="4" />
+
+      <div class="buttons">
+        <button onclick="startSimulation()">▶ Start</button>
+        <button onclick="prevStep()">⏪ Prev</button>
+        <button onclick="nextStep()">Next ⏩</button>
+        <button onclick="resetSimulation()">🔄 Reset</button>
+      </div>
     </div>
 
-    <div id="output"></div>
+    <div class="status-panel">
+      <div><strong>Step:</strong> <span id="stepCount">0</span></div>
+      <div><strong>Page:</strong> <span id="pageRef">-</span></div>
+      <div><strong>Action:</strong> <span id="action"></span></div>
+      <div><strong>Hit:</strong> <span id="hit">-</span></div>
+      <div><strong>Hits:</strong> <span id="hitCount">0</span></div>
+      <div><strong>Faults:</strong> <span id="faultCount">0</span></div>
+    </div>
+
+    <div id="frameDisplay" class="frame-display"></div>
   </div>
 
   <script src="script.js"></script>
