@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disk Scheduling Algorithms</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Disk Scheduling Algorithms</h1>
+    </header>
+
+    <nav>
+        <div class="algorithm-selection">
+            <button class="algorithm-btn active" data-algorithm="fcfs">FCFS</button>
+            <button class="algorithm-btn" data-algorithm="sstf">SSTF</button>
+            <button class="algorithm-btn" data-algorithm="scan">SCAN</button>
+            <button class="algorithm-btn" data-algorithm="look">LOOK</button>
+            <button class="algorithm-btn" data-algorithm="cscan">C-SCAN</button>
+            <button class="algorithm-btn" data-algorithm="clook">C-LOOK</button>
+            <button class="algorithm-btn" data-algorithm="nstep">N-Step SCAN</button>
+            <button class="algorithm-btn" data-algorithm="fscan">FSCAN</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="input-section">
+            <div class="form-group">
+                <label for="disk-size">Disk Size (cylinders):</label>
+                <input type="number" id="disk-size" value="200" min="10" max="1000">
+            </div>
+            <div class="form-group">
+                <label for="head-position">Initial Head Position:</label>
+                <input type="number" id="head-position" value="50" min="0" max="200">
+            </div>
+            <div class="form-group">
+                <label for="request-queue">Request Queue (comma-separated):</label>
+                <input type="text" id="request-queue" value="98, 183, 37, 122, 14, 124, 65, 67">
+            </div>
+            <div class="form-group scan-direction">
+                <label>Direction (for SCAN, LOOK, C-SCAN, C-LOOK):</label>
+                <div class="radio-group">
+                    <input type="radio" id="direction-right" name="direction" value="right" checked>
+                    <label for="direction-right">Right (Increasing)</label>
+                    <input type="radio" id="direction-left" name="direction" value="left">
+                    <label for="direction-left">Left (Decreasing)</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="nstep-value">N Value (for N-Step SCAN):</label>
+                <input type="number" id="nstep-value" value="3" min="1" max="10">
+            </div>
+            <div class="form-group">
+                <label for="animation-speed">Animation Speed:</label>
+                <input type="range" id="animation-speed" min="100" max="2000" value="1000">
+                <span id="speed-value">Normal</span>
+            </div>
+            <button id="run-algorithm">Run Algorithm</button>
+        </div>
+
+        <div class="visualization-section">
+            <h2>Step-by-Step Visualization</h2>
+            <div class="disk-visualization">
+                <div class="disk-track">
+                    <div class="disk-cylinder-markers"></div>
+                    <div class="disk-head"></div>
+                    <div class="disk-requests"></div>
+                    <div class="seek-paths"></div>
+                </div>
+            </div>
+        
+            <div class="statistics">
+                <div class="total-seek-distance">Total Seek Distance: <span id="total-distance">0</span></div>
+                <div class="average-seek-distance">Average Seek Distance: <span id="avg-distance">0</span></div>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <h2 id="algorithm-title">First-Come, First-Served (FCFS)</h2>
+            <div id="algorithm-description">
+                <p>
+                    <strong>First-Come, First-Served (FCFS)</strong> is the simplest disk scheduling algorithm where requests are served in the exact order they arrive in the queue, regardless of their location on disk.
+                </p>
+                <p><strong>Key Characteristics:</strong></p>
+                <ul>
+                    <li><strong>Fairness:</strong> All requests are treated equally, no request suffers from starvation</li>
+                    <li><strong>Simplicity:</strong> Easy to implement and understand</li>
+                    <li><strong>Predictability:</strong> Service order is completely deterministic</li>
+                </ul>
+                <p><strong>Drawbacks:</strong></p>
+                <ul>
+                    <li><strong>Performance:</strong> Often results in poor overall performance with high average seek time</li>
+                    <li><strong>Inefficiency:</strong> Does not optimize head movement, potentially causing excessive back-and-forth movement</li>
+                    <li><strong>No locality consideration:</strong> Ignores potential benefits of serving nearby requests together</li>
+                </ul>
+                <p><strong>Best used when:</strong> The workload is uniform and spread evenly across the disk, or when fairness is more important than performance.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Graph Visualization Section -->
+    <div class="container">
+        <div class="graph-visualization-section">
+            <h2>Graph Visualization</h2>
+            <div class="graph-container">
+                <div class="graph-area">
+                    <canvas id="graph-canvas"></canvas>
+                </div>
+                <div class="x-axis">
+                    <div class="x-axis-label">Request Sequence</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Execution Log Section -->
+    <div class="container">
+        <div class="execution-log-section">
+            <h2>Execution Logs</h2>
+            <div id="log-container"></div>
+        </div>
+    </div>
+
+    <div class="comparison-modal" id="comparison-modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Algorithm Comparison</h2>
+            <div class="comparison-chart" id="comparison-chart"></div>
+        </div>
+    </div>
+
+    <footer>
+        <button id="compare-algorithms">Compare Algorithms</button>
+        <button id="reset">Reset</button>
+        <div class="credits">
+            <p>Disk Scheduling Algorithms Simulator © 2025</p>
+        </div>
+    </footer>
+
+    <!-- Hidden Algorithm Information Sections -->
+    <div id="algorithm-info" style="display: none;">
+        <!-- FCFS Algorithm Info -->
+        <div data-algorithm="fcfs">
+            <h2>First-Come, First-Served (FCFS)</h2>
+            <div>
+                <p>
+                    <strong>First-Come, First-Served (FCFS)</strong> is the simplest disk scheduling algorithm where requests are served in the exact order they arrive in the queue, regardless of their location on disk.
+                </p>
+                <p><strong>Key Characteristics:</strong></p>
+                <ul>
+                    <li><strong>Fairness:</strong> All requests are treated equally, no request suffers from starvation</li>
+                    <li><strong>Simplicity:</strong> Easy to implement and understand</li>
+                    <li><strong>Predictability:</strong> Service order is completely deterministic</li>
+                </ul>
+                <p><strong>Drawbacks:</strong></p>
+                <ul>
+                    <li><strong>Performance:</strong> Often results in poor overall performance with high average seek time</li>
+                    <li><strong>Inefficiency:</strong> Does not optimize head movement, potentially causing excessive back-and-forth movement</li>
+                    <li><strong>No locality consideration:</strong> Ignores potential benefits of serving nearby requests together</li>
+                </ul>
+                <p><strong>Best used when:</strong> The workload is uniform and spread evenly across the disk, or when fairness is more important than performance.</p>
+            </div>
+        </div>
+
+        <!-- SSTF Algorithm Info -->
+        <div data-algorithm="sstf">
+            <h2>Shortest Seek Time First (SSTF)</h2>
+            <div>
+                <p>
+                    <strong>Shortest Seek Time First (SSTF)</strong> is a disk scheduling algorithm that selects the request closest to the current head position, minimizing the seek time for each individual request.
+                </p>
+                <p><strong>Key Characteristics:</strong></p>
+                <ul>
+                    <li><strong>Efficiency:</strong> Reduces the total head movement and average seek time</li>
+                    <li><strong>Improved throughput:</strong> Processes more requests per unit time compared to FCFS</li>
+                    <li><strong>Locality exploitation:</strong> Takes advantage of requests that are physically close to each other</li>
+                </ul>
+                <p><strong>Drawbacks:</strong></p>
+                <ul>
+                    <li><strong>Starvation:</strong> Requests far from the head position may suffer from indefinite postponement</li>
+                    <li><strong>Favors middle cylinders:</strong> Central disk areas typically receive better service</li>
+                    <li><strong>Overhead:</strong> Requires calculating distances to all pending requests</li>
+                </ul>
+                <p><strong>Implementation details:</strong> SSTF can be implemented as a form of Shortest Job First (SJF) scheduling where the "job" is the seek distance.</p>
+                <p><strong>Best used when:</strong> Performance is a priority and the request distribution is not heavily skewed toward specific disk regions.</p>
+            </div>
+        </div>
+
+        <!-- SCAN Algorithm Info -->
+        <div data-algorithm="scan">
+            <h2>SCAN (Elevator) Algorithm</h2>
+            <div>
+                <p>
+                    <strong>SCAN</strong>, also known as the Elevator algorithm, moves the disk head in one direction (increasing or decreasing cylinder numbers) until it reaches the end of the disk, serving all requests along the way. It then reverses direction and moves back, again serving requests encountered.
+                </p>
+                <p><strong>Key Characteristics:</strong></p>
+                <ul>
+                    <li><strong>Direction-based service:</strong> Follows a single direction until reaching disk end</li>
+                    <li><strong>Fairness improvement:</strong> Better distribution of service than SSTF</li>
+                    <li><strong>Reduced starvation:</strong> Each request is eventually serviced</li>
+                    <li><strong>Predictable behavior:</strong> Request service patterns are more predictable</li>
+                </ul>
+                <p><strong>Drawbacks:</strong></p>
+                <ul>
+                    <li><strong>Uneven waiting times:</strong> Requests just missed may wait for a full scan cycle</li>
+                    <li><strong>Edge inefficiency:</strong> Always travels to disk extremes, even when no requests exist there</li>
+                    <li><strong>Head position bias:</strong> Cylinders at opposite ends have different average wait times</li>
+                </ul>
+                <p><strong>Real-world analogy:</strong> Like an elevator in a building that continues in its current direction until the last floor, then reverses.</p>
+                <p><strong>Best used when:</strong> Requests are distributed throughout the disk and fairness is important alongside performance.</p>
+            </div>
+        </div>
+
+        <!-- LOOK Algorithm Info -->
+        <div data-algorithm="look">
+            <h2>LOOK Algorithm</h2>
+            <div>
+                <p>
+                    <strong>LOOK</strong> is an optimized variation of SCAN that moves in one direction until the last request in that direction is served, then reverses without going all the way to the disk end.
+                </p>
+                <p><strong>Key Characteristics:</strong></p>
+                <ul>
+                    <li><strong>Efficiency improvement:</strong> Avoids unnecessary movement to disk extremes</li>
+                    <li><strong>Direction-based:</strong> Similar to SCAN but "looks" ahead to determine when to reverse</li>
+                    <li><strong>Reduces seek overhead:</strong> Eliminates wasted seek time to disk boundaries</li>
+                </ul>
+                <p><strong>Drawbacks:</strong></p>
+                <ul>
+                    <li><strong>Some potential starvation:</strong> Still possible for requests to wait longer than others</li>
+                    <li><strong>Implementation complexity:</strong> Slightly more complex than SCAN</li>
+                    <li><strong>Request timing sensitivity:</strong> Performance depends on request arrival patterns</li>
+                </ul>
+                <p><strong>Real-world analogy:</strong> Similar to a smart elevator that doesn't go to the highest/lowest floor if there are no requests there.</p>
+                <p><strong>When to use:</strong> When you want the fairness of SCAN but with improved efficiency in avoiding unnecessary movements.</p>
+            </div>
+        </div>
+
+        <!-- C-SCAN Algorithm Info -->
+        <div data-algorithm="cscan">
+            <h2>Circular SCAN (C-SCAN) Algorithm</h2>
+            <div>
+                <p>
+                    <strong>Circular SCAN (C-SCAN)</strong> moves the head from one end of the disk to the other, serving requests along the way. However, when it reaches the end, it immediately returns to the beginning of the disk without serving requests on the return trip, then starts scanning again.
+                </p>
+                <p><strong>Key Characteristics:</strong></p>
+                <ul>
+                    <li><strong>Uniform waiting time:</strong> Provides more uniform wait times than SCAN</li>
+                    <li><strong>Single-direction service:</strong> Serves requests only during the forward sweep</li>
+                    <li><strong>Quick return:</strong> Immediately jumps back to start after reaching the end</li>
+                    <li><strong>Circular treatment:</strong> Treats cylinders as a circular list</li>
+                </ul>
+                <p><strong>Drawbacks:</strong></p>
+                <ul>
+                    <li><strong>Empty return trip:</strong> Time spent returning to disk start without serving requests</li>
+                    <li><strong>Higher average movement:</strong> May result in longer overall head movement</li>
+                    <li><strong>Timing sensitivity:</strong> Performance highly dependent on request arrival patterns</li>
+                </ul>
+                <p><strong>Real-world analogy:</strong> Like an elevator that only goes up, stopping at requested floors; upon reaching the top, it quickly returns to the ground floor without intermediate stops.</p>
+                <p><strong>Best used when:</strong> More uniform waiting times are desired and the system can handle the overhead of the return trip.</p>
+            </div>
+        </div>
+
+        <!-- C-LOOK Algorithm Info -->
+        <div data-algorithm="clook">
+            <h2>Circular LOOK (C-LOOK) Algorithm</h2>
+            <div>
+                <p>
+                    <strong>Circular LOOK (C-LOOK)</strong> combines the principles of LOOK and C-SCAN. It moves in one direction serving requests until no more requests exist in that direction, then immediately jumps to the furthest request in the opposite direction without serving requests during the return trip.
+                </p>
+                <p><strong>Key Characteristics:</strong></p>
+                <ul>
+                    <li><strong>Enhanced efficiency:</strong> Combines the best aspects of LOOK and C-SCAN</li>
+                    <li><strong>Reduced head movement:</strong> Avoids traveling to disk extremes unnecessarily</li>
+                    <li><strong>Uniform service pattern:</strong> More even distribution of service than LOOK</li>
+                    <li><strong>Minimized overhead:</strong> Reduces wasted movement at both ends</li>
+                </ul>
+                <p><strong>Drawbacks:</strong></p>
+                <ul>
+                    <li><strong>Implementation complexity:</strong> Most complex of the basic algorithms</li>
+                    <li><strong>Jump overhead:</strong> Cost of the long seek during the return jump</li>
+                    <li><strong>Request timing dependency:</strong> Performance varies with request patterns</li>
+                </ul>
+                <p><strong>Real-world analogy:</strong> Like an express elevator that serves floors in ascending order until the highest requested floor, then jumps directly to the lowest requested floor to start again.</p>
+                <p><strong>Best used when:</strong> Maximum efficiency is required alongside relatively uniform waiting times.</p>
+            </div>
+        </div>
+
+        <!-- N-Step SCAN Algorithm Info -->
+        <div data-algorithm="nstep">
+            <h2>N-Step SCAN Algorithm</h2>
+            <div>
+                <p>
+                    <strong>N-Step SCAN</strong> segments the request queue into smaller groups of N requests. It processes each segment using the SCAN algorithm, but only considers the next batch once the current batch is completely processed.
+                </p>
+                <p><strong>Key Characteristics:</strong></p>
+                <ul>
+                    <li><strong>Batched processing:</strong> Handles requests in fixed-size groups</li>
+                    <li><strong>Reduced starvation:</strong> New requests wait only until current batch completes</li>
+                    <li><strong>Controlled response time:</strong> Upper bound on waiting time for new requests</li>
+                    <li><strong>Tunable performance:</strong> N value affects balance between throughput and response time</li>
+                </ul>
+                <p><strong>Drawbacks:</strong></p>
+                <ul>
+                    <li><strong>N-value dependency:</strong> Performance highly dependent on choosing optimal N</li>
+                    <li><strong>Potential inefficiency:</strong> May miss optimization opportunities between batches</li>
+                    <li><strong>Added complexity:</strong> Requires batch management overhead</li>
+                </ul>
+                <p><strong>Implementation considerations:</strong> Smaller N values favor response time, while larger values favor throughput. The batch size should be tuned to workload characteristics.</p>
+                <p><strong>Best used when:</strong> Response time guarantees are important and the workload has a mix of random and sequential access patterns.</p>
+            </div>
+        </div>
+
+        <!-- FSCAN Algorithm Info -->
+        <div data-algorithm="fscan">
+            <h2>FSCAN Algorithm</h2>
+            <div>
+                <p>
+                    <strong>FSCAN</strong> uses two queues: an active queue and a pending queue. While the active queue is being processed using SCAN, new requests join the pending queue. When the active queue is empty, the pending queue becomes the active queue, and the process repeats.
+                </p>
+                <p><strong>Key Characteristics:</strong></p>
+                <ul>
+                    <li><strong>Queue separation:</strong> Uses dual queues to isolate in-process and new requests</li>
+                    <li><strong>Request freezing:</strong> Current scan processes a fixed set of requests</li>
+                    <li><strong>Improved fairness:</strong> All requests in a batch have equal priority</li>
+                    <li><strong>Predictable behavior:</strong> Prevents continuous interference from new requests</li>
+                </ul>
+                <p><strong>Drawbacks:</strong></p>
+                <ul>
+                    <li><strong>Implementation overhead:</strong> Requires management of multiple queues</li>
+                    <li><strong>Waiting time variation:</strong> Request timing relative to queue swap affects wait times</li>
+                    <li><strong>Potential inefficiency:</strong> May miss nearby cylinders if they arrive in pending queue</li>
+                </ul>
+                <p><strong>Comparison with N-Step:</strong> FSCAN uses a dynamic batch size based on arrival patterns, while N-Step uses fixed-size batches.</p>
+                <p><strong>Best used when:</strong> The system experiences bursts of requests and needs to provide consistent performance without request starvation.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Script to handle displaying algorithm information
+        document.addEventListener('DOMContentLoaded', function() {
+            const algorithmButtons = document.querySelectorAll('.algorithm-btn');
+            const algorithmTitle = document.getElementById('algorithm-title');
+            const algorithmDescription = document.getElementById('algorithm-description');
+            const algorithmInfo = document.getElementById('algorithm-info');
+            
+            // Function to update algorithm information
+            function updateAlgorithmInfo(algorithm) {
+                const info = algorithmInfo.querySelector(`[data-algorithm="${algorithm}"]`);
+                if (info) {
+                    algorithmTitle.textContent = info.querySelector('h2').textContent;
+                    algorithmDescription.innerHTML = info.querySelector('div').innerHTML;
+                }
+            }
+            
+            // Set initial algorithm info
+            updateAlgorithmInfo('fcfs');
+            
+            // Add click event listeners to algorithm buttons
+            algorithmButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    algorithmButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update algorithm information based on selected algorithm
+                    const algorithm = this.getAttribute('data-algorithm');
+                    updateAlgorithmInfo(algorithm);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
