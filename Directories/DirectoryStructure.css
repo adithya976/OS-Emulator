@@ -1,0 +1,328 @@
+/* Base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f8;
+    padding: 20px;
+}
+
+header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px 8px 8px 8px;
+    margin-bottom: 20px;
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3, h4 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+h1 {
+    font-size: 2.2em;
+}
+
+h2 {
+    font-size: 1.8em;
+    border-bottom: 2px solid #eaeaea;
+    padding-bottom: 10px;
+    margin-top: 30px;
+}
+
+h3 {
+    font-size: 1.4em;
+    margin-top: 20px;
+}
+
+h4 {
+    font-size: 1.1em;
+    margin-top: 15px;
+}
+
+p, ul, ol {
+    margin-bottom: 15px;
+}
+
+ul, ol {
+    padding-left: 20px;
+}
+
+section {
+    margin-bottom: 40px;
+}
+
+footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Directory types section styling */
+.directory-type {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.comparison {
+    display: flex;
+    gap: 20px;
+    margin: 15px 0;
+}
+
+.advantages, .disadvantages {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.advantages {
+    background-color: #e8f5e9;
+}
+
+.disadvantages {
+    background-color: #ffebee;
+}
+
+/* Simulation section styling */
+.simulation-controls {
+    background-color: #f0f5ff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.input-group label {
+    width: 200px;
+    font-weight: bold;
+}
+
+input, select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 150px;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+.simulation-results {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.structure-representation {
+    flex: 1;
+    min-width: 300px;
+}
+
+.operation-details {
+    flex: 1;
+    min-width: 300px;
+}
+
+#structure-container {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    min-height: 300px;
+    background-color: #f9f9f9;
+}
+
+.directory {
+    margin-left: 20px;
+    border-left: 2px solid #ccc;
+    padding-left: 15px;
+}
+
+.directory-name {
+    font-weight: bold;
+    color: #2c3e50;
+    cursor: pointer;
+}
+
+.directory-name::before {
+    content: "📁 ";
+}
+
+.file-item {
+    margin-left: 20px;
+    color: #666;
+}
+
+.file-item::before {
+    content: "📄 ";
+}
+
+#operation-info {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    min-height: 200px;
+}
+
+.nav-dir {
+    color: #2c3e50;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.nav-dir:hover {
+    color: #3498db;
+}
+
+.operation-log {
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+#file-path {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Tree visualization */
+.tree {
+    font-family: monospace;
+    white-space: pre;
+}
+
+.tree ul {
+    list-style-type: none;
+    padding-left: 20px;
+    position: relative;
+}
+
+.tree ul ul {
+    padding-left: 30px;
+}
+
+.tree li {
+    position: relative;
+    padding-left: 15px;
+}
+
+.tree li::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 15px;
+    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+.tree li:last-child::before {
+    height: 7px;
+}
+
+.tree li::after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 0;
+    width: 10px;
+    border-top: 1px solid #ccc;
+}
+
+.tree li:only-child::after {
+    top: 0;
+    border-top: none;
+}
+
+.tree .file::before {
+    content: "📄 ";
+}
+
+.tree .directory::before {
+    content: "📁 ";
+    font-weight: bold;
+}
+
+/* Command table styling */
+.command-table {
+    margin: 20px 0;
+    overflow-x: auto;
+}
+
+.command-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.command-table th, .command-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.command-table th {
+    background-color: #2c3e50;
+    color: white;
+}
+
+.command-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.command-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.command-table code {
+    background-color: #f4f4f4;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: monospace;
+}

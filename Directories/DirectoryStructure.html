@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directory Structures in Operating Systems</title>
+    <link rel="stylesheet" href="DirectoryStructure.css">
+</head>
+<body>
+    <header>
+        <h1 style="color:aliceblue;">Directory Structures in Operating Systems</h1>
+    </header>
+
+    <main>
+        <section id="introduction">
+            <h2>Introduction to Directory Structures</h2>
+            <p>A directory structure is a way for operating systems to organize and manage files on storage devices. It provides a hierarchical system for naming, accessing, and organizing files in a logical manner.</p>
+            
+            <h3>What is a Directory?</h3>
+            <p>A directory is a container that holds files and other directories (subdirectories). It serves as a way to group related files together and provides a namespace that prevents filename conflicts.</p>
+            
+            <h3>Why Directory Structures Matter</h3>
+            <p>Directory structures are essential for several reasons:</p>
+            <ul>
+                <li><strong>Organization:</strong> Helps users and programs organize files logically</li>
+                <li><strong>Efficiency:</strong> Enables faster file searches and access</li>
+                <li><strong>Access Control:</strong> Allows different permissions for different directories</li>
+                <li><strong>Namespace Management:</strong> Prevents filename collisions</li>
+                <li><strong>Navigation:</strong> Provides intuitive paths to locate files</li>
+            </ul>
+        </section>
+
+        <section id="directory-types">
+            <h2>Types of Directory Structures</h2>
+
+            <div class="directory-type">
+                <h3>1. Single-Level Directory (Flat Structure)</h3>
+                <p>In a single-level directory structure, all files are contained in the same directory. There are no subdirectories - just one directory that contains all files.</p>
+                
+                <div class="comparison">
+                    <div class="advantages">
+                        <h4>Advantages:</h4>
+                        <ul>
+                            <li>Simple to implement and understand</li>
+                            <li>Easy to search for files (all in one place)</li>
+                            <li>Low overhead for the operating system</li>
+                            <li>Fast access to all files</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="disadvantages">
+                        <h4>Disadvantages:</h4>
+                        <ul>
+                            <li>Limited scalability - becomes unmanageable with many files</li>
+                            <li>Filename collisions - no two files can have the same name</li>
+                            <li>Poor organization - no grouping of related files</li>
+                            <li>No access control for different file groups</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="directory-type">
+                <h3>2. Tree-Structured Directory</h3>
+                <p>In a tree-structured directory, there is a root directory that contains files and subdirectories. Each subdirectory can contain more files and subdirectories, creating a hierarchical tree structure.</p>
+                
+                <div class="comparison">
+                    <div class="advantages">
+                        <h4>Advantages:</h4>
+                        <ul>
+                            <li>Better organization - files can be grouped logically</li>
+                            <li>Scalable - can handle thousands of files efficiently</li>
+                            <li>Allows same filename in different directories</li>
+                            <li>More efficient searching within specific directories</li>
+                            <li>Better security through directory-level permissions</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="disadvantages">
+                        <h4>Disadvantages:</h4>
+                        <ul>
+                            <li>More complex to implement and navigate</li>
+                            <li>Slower access for files deep in the directory tree</li>
+                            <li>Higher system overhead to maintain the structure</li>
+                            <li>Potential for directory traversal vulnerabilities</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h4>Path Names:</h4>
+                <p>Tree-structured directories use path names to locate files:</p>
+                <ul>
+                    <li><strong>Absolute Path:</strong> Starts from the root directory (e.g., /users/john/documents/report.txt)</li>
+                    <li><strong>Relative Path:</strong> Starts from the current directory (e.g., documents/report.txt if current directory is /users/john)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="directory-operations">
+            <h2>Directory Operations</h2>
+            <p>These are common commands used to manage directories and files in Unix/Linux and Windows (via WSL):</p>
+        
+            <div class="command-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Description</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>mkdir</code></td>
+                            <td>Create a new directory</td>
+                            <td><code>mkdir my_folder</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>rmdir</code></td>
+                            <td>Remove an <strong>empty</strong> directory</td>
+                            <td><code>rmdir old_folder</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>cd</code></td>
+                            <td>Change current directory</td>
+                            <td><code>cd /home/user/docs</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>touch</code></td>
+                            <td>Create an empty file or update timestamp</td>
+                            <td><code>touch file.txt</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>nano</code></td>
+                            <td>Edit a file in the Nano text editor</td>
+                            <td><code>nano notes.txt</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>rm</code></td>
+                            <td>Delete a file (or directory with <code>-r</code>)</td>
+                            <td><code>rm -r folder/</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        
+            <h3>Key Notes:</h3>
+            <ul>
+                <li><strong>Windows equivalent:</strong> Use <code>md</code> (mkdir), <code>rd</code> (rmdir), <code>type nul > file.txt</code> (touch).</li>
+                <li><strong>Permissions matter:</strong> <code>rm -r</code> deletes directories <strong>recursively</strong> (use cautiously!).</li>
+                <li><strong>Relative vs. absolute paths:</strong> <code>cd ../</code> (parent dir) vs. <code>cd /home</code>.</li>
+            </ul>
+        </section>
+
+        <section id="simulation">
+            <h2>Directory Structure Simulation</h2>
+            
+            <div class="simulation-controls">
+                <h3>Configure Simulation</h3>
+                <div class="input-group">
+                    <label for="structure-type">Directory Structure:</label>
+                    <select id="structure-type">
+                        <option value="single">Single-Level</option>
+                        <option value="tree">Tree-Structured</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="num-files">Number of Files:</label>
+                    <input type="number" id="num-files" min="1" max="20" value="5">
+                </div>
+
+                <div class="input-group" id="num-dirs-group" style="display: none;">
+                    <label for="num-dirs">Number of Subdirectories:</label>
+                    <input type="number" id="num-dirs" min="1" max="5" value="2">
+                </div>
+
+                <button id="run-simulation">Run Simulation</button>
+                <button id="reset-simulation">Reset</button>
+            </div>
+
+            <div class="simulation-results">
+                <div class="structure-representation">
+                    <h3>Directory Structure Visualization</h3>
+                    <div id="structure-container">
+                        <!-- Directory structure will be rendered here -->
+                    </div>
+                </div>
+
+                <div class="operation-details">
+                    <h3>Operation Simulation</h3>
+                    <div id="operation-controls">
+                        <div class="input-group">
+                            <label for="file-path">File Path:</label>
+                            <input type="text" id="file-path" placeholder="e.g., /docs/report.txt">
+                        </div>
+                        <button id="find-file">Find File</button>
+                        <button id="create-file">Create File</button>
+                        <button id="delete-file">Delete File</button>
+                    </div>
+                    <div id="operation-info">
+                        <!-- Operation information will be shown here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Created for educational purposes - Directory Structures in Operating Systems</p>
+    </footer>
+
+    <script src="DirectoryStructure.js"></script>
+</body>
+</html>
