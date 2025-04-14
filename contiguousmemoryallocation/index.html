@@ -1,31 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Memory Allocation Algorithms</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Contiguous Memory Allocation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  
 <body>
   <div class="container">
-    <h1>Memory Allocation Simulator</h1>
+    <h1>Contiguous Memory Allocation Strategies</h1>
 
-    <label for="blocks">Block Sizes (comma separated)</label>
-    <input type="text" id="blocks" placeholder="e.g. 100,500,200,300,600" />
+    <div class="theory-section">
+      <h2>📘 What is Contiguous Memory Allocation?</h2>
+      <p>Contiguous memory allocation is a method where each process is allocated a single continuous block of memory. It is simple and efficient for small systems but can lead to fragmentation problems in larger systems.</p>
 
-    <label for="processes">Process Sizes (comma separated)</label>
-    <input type="text" id="processes" placeholder="e.g. 212,417,112,426" />
+      <h2>🧠 Strategies</h2>
+      <h2>📈 Advantages & Disadvantages of Each Strategy</h2>
 
-    <label for="algorithm">Choose Algorithm:</label>
-    <select id="algorithm">
-      <option value="first">First Fit</option>
-      <option value="best">Best Fit</option>
-      <option value="worst">Worst Fit</option>
-      <option value="next">Next Fit</option>
-    </select>
+<h3>First Fit</h3>
+<ul>
+  <li><strong>Advantages:</strong>
+    <ul>
+      <li>Faster than other strategies due to early termination of search.</li>
+      <li>Simple to implement and understand.</li>
+      <li>Efficient for small and average workloads.</li>
+    </ul>
+  </li>
+  <li><strong>Disadvantages:</strong>
+    <ul>
+      <li>Can lead to external fragmentation quickly.</li>
+      <li>Memory is used inefficiently over time.</li>
+    </ul>
+  </li>
+</ul>
 
-    <button onclick="allocate()">Allocate Memory</button>
+<h3>Best Fit</h3>
+<ul>
+  <li><strong>Advantages:</strong>
+    <ul>
+      <li>Reduces internal fragmentation by using the smallest sufficient block.</li>
+      <li>Optimizes space utilization in the short term.</li>
+    </ul>
+  </li>
+  <li><strong>Disadvantages:</strong>
+    <ul>
+      <li>May increase external fragmentation.</li>
+      <li>Slower due to the need to scan all blocks to find the best fit.</li>
+      <li>Frequent small leftover memory blocks.</li>
+    </ul>
+  </li>
+</ul>
 
-    <div id="output"></div>
+<h3>Worst Fit</h3>
+<ul>
+  <li><strong>Advantages:</strong>
+    <ul>
+      <li>Leaves larger free memory blocks for future allocations.</li>
+      <li>Less external fragmentation early on.</li>
+    </ul>
+  </li>
+  <li><strong>Disadvantages:</strong>
+    <ul>
+      <li>High internal fragmentation.</li>
+      <li>May waste large memory blocks unnecessarily.</li>
+      <li>Slower performance due to full scan for largest block.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>Next Fit</h3>
+<ul>
+  <li><strong>Advantages:</strong>
+    <ul>
+      <li>More balanced than First Fit by avoiding repeated use of lower memory blocks.</li>
+      <li>Faster allocation after initial usage since it continues from the last allocation.</li>
+    </ul>
+  </li>
+  <li><strong>Disadvantages:</strong>
+    <ul>
+      <li>May behave worse than First Fit in fragmented memory conditions.</li>
+      <li>Does not always utilize optimal available blocks.</li>
+    </ul>
+  </li>
+</ul>
+
+      <ul>
+        <li><strong>First Fit:</strong> Allocates the first block that is large enough.</li>
+        <li><strong>Best Fit:</strong> Allocates the smallest block that is just enough.</li>
+        <li><strong>Worst Fit:</strong> Allocates the largest block available.</li>
+        <li><strong>Next Fit:</strong> Similar to First Fit but continues search from where it left off.</li>
+      </ul>
+
+      <h2>📊 Comparison Table</h2>
+      <table>
+        <tr>
+          <th>Strategy</th>
+          <th>Fragmentation</th>
+          <th>Speed</th>
+          <th>Memory Utilization</th>
+        </tr>
+        <tr>
+          <td>First Fit</td>
+          <td>Moderate External</td>
+          <td>Fast</td>
+          <td>Moderate</td>
+        </tr>
+        <tr>
+          <td>Best Fit</td>
+          <td>High External</td>
+          <td>Slow</td>
+          <td>High</td>
+        </tr>
+        <tr>
+          <td>Worst Fit</td>
+          <td>Low Internal</td>
+          <td>Slow</td>
+          <td>Low</td>
+        </tr>
+        <tr>
+          <td>Next Fit</td>
+          <td>Moderate</td>
+          <td>Faster than First Fit</td>
+          <td>Moderate</td>
+        </tr>
+      </table>
+
+      <h2>🚧 Challenges</h2>
+      <ul>
+        <li><strong>External Fragmentation:</strong> Free memory becomes split into small blocks.</li>
+        <li><strong>Internal Fragmentation:</strong> Allocated memory may be slightly larger than needed.</li>
+        <li><strong>Compaction:</strong> Needed to create larger contiguous blocks.</li>
+        <li><strong>Protection:</strong> Preventing one process from accessing another's memory.</li>
+      </ul>
+
+      <button id="startBtn">Start Simulation</button>
+    </div>
+
+    <div id="simulator" style="display: none;">
+      <h2>💻 Memory Allocation Simulation</h2>
+      <label>Block Sizes (comma-separated):</label>
+      <input type="text" id="blocks" placeholder="e.g., 100, 500, 200, 300, 600" />
+
+      <label>Process Sizes (comma-separated):</label>
+      <input type="text" id="processes" placeholder="e.g., 212, 417, 112, 426" />
+
+      <label>Select Strategy:</label>
+      <select id="strategy">
+        <option value="first">First Fit</option>
+        <option value="best">Best Fit</option>
+        <option value="worst">Worst Fit</option>
+        <option value="next">Next Fit</option>
+      </select>
+
+      <button onclick="simulate()">Allocate</button>
+
+      <div id="result"></div>
+    </div>
   </div>
 
   <script src="script.js"></script>
