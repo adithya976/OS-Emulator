@@ -1,129 +1,113 @@
-function allocate() {
-    const blocksInput = document.getElementById("blocks").value;
-    const processesInput = document.getElementById("processes").value;
-    const algorithm = document.getElementById("algorithm").value;
-  
-    const blocks = blocksInput.split(",").map(Number);
-    const processes = processesInput.split(",").map(Number);
-  
-    if (blocks.some(isNaN) || processes.some(isNaN)) {
-      alert("Please enter valid numeric values.");
-      return;
-    }
-  
-    let allocation;
-    switch (algorithm) {
-      case "first":
-        allocation = firstFit([...blocks], processes);
-        break;
-      case "best":
-        allocation = bestFit([...blocks], processes);
-        break;
-      case "worst":
-        allocation = worstFit([...blocks], processes);
-        break;
-      case "next":
-        allocation = nextFit([...blocks], processes);
-        break;
-    }
-  
-    displayTable(processes, allocation, algorithm);
+document.getElementById("startBtn").addEventListener("click", () => {
+  document.getElementById("simulator").style.display = "block";
+  document.getElementById("startBtn").style.display = "none";
+  window.scrollTo({
+    top: document.getElementById("simulator").offsetTop,
+    behavior: "smooth"
+  });
+});
+
+function simulate() {
+  const blockSizes = document.getElementById("blocks").value.split(",").map(Number);
+  const processSizes = document.getElementById("processes").value.split(",").map(Number);
+  const strategy = document.getElementById("strategy").value;
+
+  let result = [];
+  switch (strategy) {
+    case "first": result = firstFit(blockSizes, processSizes); break;
+    case "best": result = bestFit(blockSizes, processSizes); break;
+    case "worst": result = worstFit(blockSizes, processSizes); break;
+    case "next": result = nextFit(blockSizes, processSizes); break;
   }
-  
-  function firstFit(blocks, processes) {
-    const alloc = Array(processes.length).fill(-1);
-    for (let i = 0; i < processes.length; i++) {
-      for (let j = 0; j < blocks.length; j++) {
-        if (blocks[j] >= processes[i]) {
-          alloc[i] = j;
-          blocks[j] -= processes[i];
-          break;
+
+  displayResult(processSizes, result);
+}
+
+function firstFit(blocks, processes) {
+  let alloc = Array(processes.length).fill(-1);
+  for (let i = 0; i < processes.length; i++) {
+    for (let j = 0; j < blocks.length; j++) {
+      if (blocks[j] >= processes[i]) {
+        alloc[i] = j;
+        blocks[j] -= processes[i];
+        break;
+      }
+    }
+  }
+  return alloc;
+}
+
+function bestFit(blocks, processes) {
+  let alloc = Array(processes.length).fill(-1);
+  for (let i = 0; i < processes.length; i++) {
+    let bestIdx = -1;
+    for (let j = 0; j < blocks.length; j++) {
+      if (blocks[j] >= processes[i]) {
+        if (bestIdx === -1 || blocks[j] < blocks[bestIdx]) {
+          bestIdx = j;
         }
       }
     }
-    return alloc;
+    if (bestIdx !== -1) {
+      alloc[i] = bestIdx;
+      blocks[bestIdx] -= processes[i];
+    }
   }
-  
-  function bestFit(blocks, processes) {
-    const alloc = Array(processes.length).fill(-1);
-    for (let i = 0; i < processes.length; i++) {
-      let bestIdx = -1;
-      for (let j = 0; j < blocks.length; j++) {
-        if (blocks[j] >= processes[i]) {
-          if (bestIdx === -1 || blocks[j] < blocks[bestIdx]) {
-            bestIdx = j;
-          }
+  return alloc;
+}
+
+function worstFit(blocks, processes) {
+  let alloc = Array(processes.length).fill(-1);
+  for (let i = 0; i < processes.length; i++) {
+    let worstIdx = -1;
+    for (let j = 0; j < blocks.length; j++) {
+      if (blocks[j] >= processes[i]) {
+        if (worstIdx === -1 || blocks[j] > blocks[worstIdx]) {
+          worstIdx = j;
         }
       }
-      if (bestIdx !== -1) {
-        alloc[i] = bestIdx;
-        blocks[bestIdx] -= processes[i];
+    }
+    if (worstIdx !== -1) {
+      alloc[i] = worstIdx;
+      blocks[worstIdx] -= processes[i];
+    }
+  }
+  return alloc;
+}
+
+function nextFit(blocks, processes) {
+  let alloc = Array(processes.length).fill(-1);
+  let lastIndex = 0;
+  for (let i = 0; i < processes.length; i++) {
+    let found = false;
+    for (let j = lastIndex; j < blocks.length; j++) {
+      if (blocks[j] >= processes[i]) {
+        alloc[i] = j;
+        blocks[j] -= processes[i];
+        lastIndex = j;
+        found = true;
+        break;
       }
     }
-    return alloc;
-  }
-  
-  function worstFit(blocks, processes) {
-    const alloc = Array(processes.length).fill(-1);
-    for (let i = 0; i < processes.length; i++) {
-      let worstIdx = -1;
-      for (let j = 0; j < blocks.length; j++) {
-        if (blocks[j] >= processes[i]) {
-          if (worstIdx === -1 || blocks[j] > blocks[worstIdx]) {
-            worstIdx = j;
-          }
-        }
-      }
-      if (worstIdx !== -1) {
-        alloc[i] = worstIdx;
-        blocks[worstIdx] -= processes[i];
-      }
-    }
-    return alloc;
-  }
-  
-  function nextFit(blocks, processes) {
-    const alloc = Array(processes.length).fill(-1);
-    let lastIndex = 0;
-    for (let i = 0; i < processes.length; i++) {
-      let found = false;
-      for (let j = lastIndex; j < blocks.length; j++) {
+    if (!found) {
+      for (let j = 0; j < lastIndex; j++) {
         if (blocks[j] >= processes[i]) {
           alloc[i] = j;
           blocks[j] -= processes[i];
           lastIndex = j;
-          found = true;
           break;
         }
       }
-      if (!found) {
-        for (let j = 0; j < lastIndex; j++) {
-          if (blocks[j] >= processes[i]) {
-            alloc[i] = j;
-            blocks[j] -= processes[i];
-            lastIndex = j;
-            break;
-          }
-        }
-      }
     }
-    return alloc;
   }
-  
-  function displayTable(processes, allocation, algorithmName) {
-    let nameMap = {
-      first: "First Fit",
-      best: "Best Fit",
-      worst: "Worst Fit",
-      next: "Next Fit"
-    };
-  
-    let html = `<h2>${nameMap[algorithmName]} Allocation Result</h2>`;
-    html += `<table><tr><th>Process No.</th><th>Size</th><th>Block No.</th></tr>`;
-    for (let i = 0; i < processes.length; i++) {
-      html += `<tr><td>${i + 1}</td><td>${processes[i]}</td><td>${allocation[i] !== -1 ? allocation[i] + 1 : "Not Allocated"}</td></tr>`;
-    }
-    html += `</table>`;
-    document.getElementById("output").innerHTML = html;
+  return alloc;
+}
+
+function displayResult(processes, alloc) {
+  let html = `<h3>📋 Allocation Results</h3><table><tr><th>Process No.</th><th>Size</th><th>Block No.</th></tr>`;
+  for (let i = 0; i < processes.length; i++) {
+    html += `<tr><td>${i + 1}</td><td>${processes[i]}</td><td>${alloc[i] !== -1 ? alloc[i] + 1 : "Not Allocated"}</td></tr>`;
   }
-  
+  html += `</table>`;
+  document.getElementById("result").innerHTML = html;
+}
