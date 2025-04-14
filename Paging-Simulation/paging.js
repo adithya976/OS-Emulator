@@ -187,12 +187,12 @@ function calculatePhysicalAddress() {
     Process ${processNo}, Page ${pageNo}, Offset ${offset}<br>
     Maps to:<br>
     Frame ${frameNumber}, Physical Address ${physicalAddress}<br>
-    <small>Formula: (Frame x Page Size) + Offset = (${frameNumber} x ${pageSize}) + ${offset} = ${physicalAddress}</small>
+    <small>Formula: (Frame × Page Size) + Offset = (${frameNumber} × ${pageSize}) + ${offset} = ${physicalAddress}</small>
   `;
   result.style.display = 'block';
   
   // Add execution step
-  addExecutionStep(`Address translation: Process ${processNo}, Page ${pageNo}, Offset ${offset} - Frame ${frameNumber}, Physical Address ${physicalAddress}`);
+  addExecutionStep(`Address translation: Process ${processNo}, Page ${pageNo}, Offset ${offset} → Frame ${frameNumber}, Physical Address ${physicalAddress}`);
   
   // Highlight the accessed frame in visualization
   highlightFrame(frameNumber);

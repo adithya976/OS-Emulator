@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CPU Scheduling</title>
+  <link rel="stylesheet" type="text/css" href="scheduling.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg" style="background-color: #2c3e50;" data-bs-theme="dark">
+    <div class="container-fluid">
+      <a class="navbar-brand"><strong>OS Simulator</strong></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse " id="navbarNav">
+        <ul class="navbar-nav ms-auto me-4">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="b" style="margin-left: 1%;" >
+  <h1>CPU Scheduling</h1>
+
+  <div class="card">
+    <h2>FCFS </h2>
+   
+    <p>First in, first out (FIFO), also known as first come, first served (FCFS), is the simplest scheduling algorithm. FIFO simply queues processes in the order that they arrive in the ready queue. 
+      In this, the process that comes first will be executed first and next process starts only after the previous gets fully executed. </p>
+      <h4>Advantages:</h4>
+    <ul>
+      <li>It is simple and easy to understand.</li>
+      <li>FCFS provides fairness by treating all processes equally and giving them an equal opportunity to run.</li>
+      <li>FCFS guarantees that every process will eventually get a chance to execute, as long as the system has enough resources to handle all the processes.</li>
+      <li>FCFS has low scheduling overhead since it does not involve frequent context switches or complex scheduling decisions. </li>
+    </ul>
+    <h4>Disadvantages:</h4>
+    <ul>
+      <li>The process with less execution time suffers i.e. waiting time is often quite long. </li>
+      <li>Favors CPU Bound process then I/O bound process.</li>
+      <li>Here, the first process will get the CPU first, other processes can get the CPU only after the current process has finished its execution. Now, suppose the first process has a large burst time, and other processes have less burst time, then the processes will have to wait more unnecessarily, this will result in more average waiting time, i.e., Convoy effect.</li>
+      <li>This effect results in lower CPU and device utilization. </li>
+    </ul>
+      <button onclick="location.href='FCFS/fcfs.html'">Simulate</button>
+  </div>
+
+  <div class="card">
+  <h2>SJF </h2>
+  <p>In SJF scheduling, the process with the lowest burst time, among the list of available processes in the ready queue, is going to be scheduled next. However, it is very difficult to predict the burst time needed for a process hence this algorithm is very difficult to implement in the system.</p>
+  <h4>Advantages:</h4>
+  <ul>
+    <li>Maximum throughput </li>
+    <li>Minimum average waiting and turnaround time.</li>  
+  </ul>
+  <h4>Disadvantages:</h4>
+  <ul>
+    <li>May suffer with the problem of starvation </li>
+    <li>It is not implementable because the exact Burst time for a process can't be known in advance.</li>  
+  </ul>
+  <button onclick="location.href='SJF/sjf.html'">Simulate</button>
+  </div>
+
+  <div class="card">
+  <h2>Priority Scheduling</h2>
+  <p>Priority scheduling is one of the most common scheduling algorithms in batch systems. Each process is assigned a priority. The process with the highest priority is to be executed first and so on. Processes with the same priority are executed on a first-come first served basis. Priority can be decided based on memory requirements, time requirements or any other resource requirement. Also priority can be decided on the ratio of average I/O to average CPU burst time.</p>
+  <h4>Advantages:</h4>
+  <ul>
+    <li>This provides a good mechanism where the relative importance of each process may be precisely defined. </li>
+    <li>PB scheduling allows for the assignment of different priorities to processes based on their importance, urgency, or other criteria.</li>  
+  </ul>
+  <h4>Disadvantages:</h4>
+  <ul>
+    <li>If high-priority processes use up a lot of CPU time, lower-priority processes may starve and be postponed indefinitely. The situation where a process never gets scheduled to run is called starvation.</li>
+    <li> Another problem is deciding which process gets which priority level assigned to it.</li>  
+  </ul>
+  <button onclick="location.href='PRIORITY/priority.html'">Simulate</button>
+  </div>
+
+  <div class="card">
+  <h2>Round Robin</h2>
+  <p>the most efficient CPU Process Scheduling Algorithm named Round Robin CPU Process Scheduling. This algorithm is very special because it is going to remove all the Flaws which we have detected in the previous CPU Process Scheduling Algorithms.There is a lot of popularity for this Round Robin CPU Scheduling is because Round Robin works only in Pre Emptive state. This makes it very reliable.</p>
+  <h4>Advantages:</h4>
+  <ul>
+    <li>Every process gets an equal share of the CPU. </li>
+    <li> RR is cyclic in nature, so there is no starvation.</li>  
+  </ul>
+  <h4>Disadvantages:</h4>
+  <ul>
+    <li>Setting the quantum too short increases the overhead and lowers the CPU efficiency, but setting it too long may cause a poor response to short processes.</li>
+    <li>The average waiting time under the RR policy is often long.</li>  
+    <li> If time quantum is very high then RR degrades to FCFS.</li>
+  </ul>
+  <button onclick="location.href='RR/round-robin.html'">Simulate</button>
+</div>
+
+<div class="card">
+  <h2>SRTF </h2>
+ 
+  <p> the process with the smallest amount of time remaining until completion is selected to execute. Since the currently executing process is the one with the shortest amount of time remaining by definition, and since that time should only reduce as execution progresses, processes will always run until they complete or a new process is added that requires a smaller amount of time. </p>
+    <h4>Advantages:</h4>
+  <ul>
+    <li>SRTF algorithm makes the processing of the jobs faster than SJN algorithm, given it’s overhead charges are not counted. </li>
+    <li> Allows for easier management of library updates or replacements without recompiling the program.</li>
+    <li>Enables efficient memory usage, as libraries can be shared among multiple instances of the program.</li>
+    <li> Provides better portability, as the program can be executed on different systems with compatible libraries available at runtime. </li>
+  </ul>
+  <h4>Disadvantages:</h4>
+  <ul>
+    <li>The context switch is done a lot more times in SRTF than in SJN, and consumes CPU’s valuable time for processing. This adds up to it’s processing time and diminishes it’s advantage of fast processing.</li>
+    <li>Slightly slower program startup due to the additional linking process.</li>
+    <li>Requires proper handling of library dependencies to ensure correct execution.</li>
+    <li>Debugging can be slightly more complex, as libraries are separate entities loaded at runtime. </li>
+  </ul>
+    <button onclick="location.href='SRTF/srtf.html'">Simulate</button>
+    </div>
+
+    <div class="card">
+    <h2>LJF </h2>
+ 
+  <p> This algorithm is based on the burst time of the processes. The processes are put into the ready queue based on their burst times i.e., in descending order of the burst times. As the name suggests this algorithm is based on the fact that the process with the largest burst time is processed first. The burst time of only those processes is considered that have arrived in the system until that time. Its preemptive version is called Longest Remaining Time First (LRTF) algorithm.  </p>
+    <h4>Advantages:</h4>
+  <ul>
+    <li>No other process can execute until the longest job or process executes completely.</li>
+    <li> All the jobs or processes finish at the same time approximately.</li>
+  </ul>
+  <h4>Disadvantages:</h4>
+  <ul>
+    <li>This algorithm gives a very high average waiting time and average turn-around time for a given set of processes.</li>
+    <li>This may lead to a convoy effect.</li>
+    <li>It may happen that a short process may never get executed and the system keeps on executing the longer processes.</li>
+    <li>It reduces the processing speed and thus reduces the efficiency and utilization of the system. </li>
+  </ul>
+    <button onclick="location.href='LJF/ljf.html'">Simulate</button>
+    </div>
+</div>
+</body>
+</html>

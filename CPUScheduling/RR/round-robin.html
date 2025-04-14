@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Round Robin Scheduling</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <!-- Favicons -->
+  <link href="../../assets/img/favicon.png" rel="icon">
+  <link href="../../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+ 
+  <!-- EXTRA LINKS -->
+  
+  
+ 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+</head>
+
+<script>
+
+  var sequence;
+  var complete;
+  var time;
+  var total;
+  var proc;
+  var n;
+  var at = [];
+  var bt = [];
+  var stuff = [];
+  var index = 1;
+  var Q = [];
+  var tq;
+  var throughput;
+  var cpu_efficiency;
+  var average_wt;
+  var average_tat;
+  $(document).ready(function () {
+    $('#add').click(function (e) {
+      AddtoList(e);
+    })
+    function DisplayList() {
+      var table = document.getElementById("ept");
+      console.log(stuff[stuff.length - 1].no);
+      $('#ept').append("<tr style=" + "background-color:#fff;" + "><td>" + stuff[stuff.length - 1].no + "</td><td>" + stuff[stuff.length - 1].at + "</td><td>" + stuff[stuff.length - 1].bt1 + "</td></tr>");
+    }
+    function AddtoList(e) {
+      e.preventDefault();
+      var arrivalTime = parseInt(document.getElementById("at1").value);
+      var burstTime = parseInt(document.getElementById("bt1").value);
+
+      if (document.getElementById("at1").value == "") {
+        alert("Arrival time field is empty!");
+        return;
+      }
+
+      if (document.getElementById("bt1").value == "") {
+        alert("Burst time field is empty!");
+        return;
+      }
+
+      if (arrivalTime < 0) {
+        alert("Arrival time cannot be negative!");
+        return;
+      }
+
+      if (burstTime < 0) {
+        alert("Burst time cannot be negative!");
+        return;
+      }
+
+      var rtj = [];
+      rtj.push(burstTime);
+      rtj.push(0);
+      rtj.push(0);
+      console.log(rtj);
+      stuff.push({
+        "at": arrivalTime,
+        "bt1": burstTime,
+        "io": parseInt("0"),
+        "bt2": parseInt("0"),
+        "check": parseInt("0"),
+        "finish": parseInt("0"),
+        "no": index,
+        "rt": rtj,
+        "point": parseInt("0"),
+        "wt": parseInt("0"),
+        "tat": parseInt("0")
+      });
+      index = index + 1;
+      console.log(stuff);
+      document.getElementById("at1").value = "";
+      document.getElementById("bt1").value = "";
+      DisplayList();
+    };
+    $('#start').click(function () {
+      tq = parseInt(document.getElementById("tq").value);
+      console.log(tq);
+
+      if (document.getElementById("tq").value == "") {
+        alert("Time quantum field is empty!");
+        return;
+      }
+
+      if (tq <= 0) {
+        alert("Time quantum should be a positive integer!");
+        return;
+      }
+
+      rr();
+      var i = 0;
+      console.log(total);
+      console.log(sequence[total].start);
+      var totalTime = sequence[total].start;
+      pixel = parseInt(800 / totalTime);
+      console.log("%d---%d\n", totalTime, pixel);
+      var containerWidth = pixel * totalTime + 2;
+      console.log("containerWidth is %d", containerWidth);
+      $('#outer-div').css('width', containerWidth + 'px');
+      displayBlock(i);
+    })
+    function rr() {
+      var proc = [];
+      for (i = 0; i < stuff.length; i++) {
+        proc.push(i + 1);
+      }
+      var n = stuff.length;
+      for (i = 0; i < n; i++) {
+        for (j = i + 1; j < n; j++) {
+          if (stuff[i].at > stuff[j].at) {
+            var temp;
+            temp = stuff[i];
+            stuff[i] = stuff[j];
+            stuff[j] = temp;
+            temp = proc[i];
+            proc[i] = proc[j];
+            proc[j] = temp;
+          }
+        }
+      }
+      console.log(stuff);
+      var time = 0;
+      var complete = 0;
+      var temp = null;
+      var st_time;
+      var first;
+      sequence = [];
+      var i;
+      if (stuff[0].at > 0) {
+        sequence.push({ start: time, n: null });
+        time += stuff[0].at;
+      }
+      Enqueue(0);
+      console.log(Q);
+      while (complete != n) {
+        console.log(Q);
+        if (Q.length > 0)
+          var index = Dequeue();
+        else {
+          index = null;
+          if (temp != index)
+            sequence.push({ start: time, n: null });
+          console.log(sequence);
+          time++;
+          for (j = 0; j < n; j++) {
+            if (stuff[j].at <= time && stuff[j].check == 1) {
+              stuff[j].rt[1]--;
+              if (stuff[j].rt[1] == 0) {
+                stuff[j].check = 0;
+                stuff[j].point++;
+              }
+            }
+            if (stuff[j].at <= time && stuff[j].finish == 0 && stuff[j].check == 0 && Q.indexOf(j) == -1) {
+              Enqueue(j);
+            }
+
+          }
+        }
+        console.log(index);
+        if (index != null && stuff[index].rt[stuff[index].point] <= tq && stuff[index].finish == 0 && stuff[index].check != 1) {
+          if (stuff[index].point == 0) {
+            var r = stuff[index].rt[stuff[index].point];
+            stuff[index].rt[stuff[index].point] = 0;
+            stuff[index].check = 1;
+            stuff[index].point++;
+            sequence.push({ start: time, n: proc[index] });
+            console.log(sequence);
+            time += r;
+            if (stuff[index].rt[1] == 0 && stuff[index].rt[2] == 0) {
+              complete++;
+              stuff[index].finish = 1;
+              stuff[index].tat = time - stuff[index].at;
+              stuff[index].wt = time - stuff[index].bt1 - stuff[index].at;
+            }
+          }
+          else if (stuff[index].point == 2) {
+            complete++;
+            stuff[index].finish = 1;
+            sequence.push({ start: time, n: proc[index] });
+            time += stuff[index].rt[stuff[index].point];
+            stuff[index].tat = time - stuff[index].at;
+            stuff[index].wt = time - stuff[index].bt1 - stuff[index].io - stuff[index].bt2 - stuff[index].at;
+          }
+          temp = index;
+          for (j = 0; j < n; j++) {
+            if (stuff[j].at <= time && stuff[j].check == 1) {
+              stuff[j].rt[1] -= r;
+              if (stuff[j].rt[1] <= 0) {
+                stuff[j].check = 0;
+                stuff[j].point++;
+              }
+            }
+            if (stuff[j].at <= time && stuff[j].finish == 0 && stuff[j].check == 0 && Q.indexOf(j) == -1) {
+              Enqueue(j);
+            }
+
+          }
+        }
+        else if (index != null && stuff[index].rt[stuff[index].point] > tq && stuff[index].finish == 0 && stuff[index].check != 1) {
+          stuff[index].rt[stuff[index].point] -= tq;
+          sequence.push({ start: time, n: proc[index] });
+          console.log(sequence);
+          time += tq;
+          temp = index;
+          for (j = 0; j < n; j++) {
+            if (stuff[j].at <= time && stuff[j].check == 1) {
+              stuff[j].rt[1] -= tq;
+              if (stuff[j].rt[1] <= 0) {
+                stuff[j].check = 0;
+                stuff[j].point++;
+              }
+            }
+          }
+          for (j = 0; j < n; j++) {
+            if (stuff[j].at <= time && stuff[j].finish == 0 && stuff[j].check == 0 && j != index && Q.indexOf(j) == -1) {
+              console.log(j);
+              Enqueue(j);
+            }
+          }
+          Enqueue(index);
+          console.log(Q);
+
+        }
+      }
+      sequence.push({ start: time, n: -1 });
+      console.log(sequence);
+      total = sequence.length - 1;
+      console.log(total);
+      var sum_wt = 0;
+      var sum_null = 0;
+      for (i = 0; i < n; i++)
+        sum_wt += stuff[i].wt;
+      average_wt = sum_wt / n;
+      var sum_tat = 0;
+      for (i = 0; i < n; i++)
+        sum_tat += stuff[i].tat;
+      average_tat = sum_tat / n;
+      var pixel = 0;
+      throughput = 1 / (time / n);
+      for (i = 0; i < sequence.length; i++) {
+        if (sequence[i].n == null) {
+          sum_null += sequence[i + 1].start - sequence[i].start;
+        }
+      }
+      cpu_efficiency = (time - sum_null) / time * 100;
+
+    }
+    function Enqueue(i) {
+      Q.push(i);
+    }
+    function Dequeue() {
+      return Q.shift();
+    }
+
+    function drawTable(i) {
+      if (i < stuff.length) {
+        var table = document.getElementById("ptable");
+        console.log(stuff[i].wt);
+        $("#ptable").append("<tr><td>" + stuff[i].no + "</td><td>" + stuff[i].at + "</td><td>" + stuff[i].bt1 + "</td><td>" + stuff[i].wt + "</td><td>" + stuff[i].tat + "</td></tr>");
+        drawTable(i + 1);
+      }
+      else {
+        var cardAdd = document.getElementById("cardAdd");
+        cardAdd.classList.add("card");
+        var element = document.getElementById("Average");
+        element.classList.add("card-body");
+        $("#Average").append("<b>CPU utilization : " + cpu_efficiency.toFixed(3) + "%</b><br>");
+        $("#Average").append("<b>Average Turn Around time : " + average_tat.toFixed(3) + "</b><br>");
+        $("#Average").append("<b>Average Waiting time: " + average_wt.toFixed(3) + "</b><br>");
+      }
+
+    }
+
+    function displayBlock(i) {
+      if (i == total) {
+        document.getElementById("ptab").style.display = 'inline-table';
+        drawTable(0);
+        return;
+      }
+
+      var blockWidth = (sequence[i + 1].start - sequence[i].start) * pixel;
+      var processName = sequence[i].n;
+      //document.getElementById("gantt").style.display='block';
+      document.getElementById("outer-div").style.display = 'inline-block';
+      document.getElementById("bt1").style.display = 'none';
+      document.getElementById("at1").style.display = 'none';
+      document.getElementById("tq").style.display = 'none';
+      document.getElementById("add").style.display = 'none';
+      document.getElementById("start").style.display = 'none';
+
+
+      if (sequence[i].n == null) {
+        $('#outer-div').append('<div class="block" id="process-' + sequence[i].start + '" style="background-color:rgba(112, 128, 144, 0.44);">CPU Idle<div class="bottom">' + sequence[i + 1].start + '</div></div>');
+      }
+      else {
+        $('#outer-div').append('<div class="block" id="process-' + sequence[i].start + '">P' + sequence[i].n + '<div class="bottom">' + sequence[i + 1].start + '</div></div>');
+      }
+      $('#process-' + sequence[i].start).css('width', blockWidth);
+
+      $('#process-' + sequence[i].start).fadeIn('slow', function () {
+        displayBlock(i + 1);
+      });
+
+    }
+  });
+</script>
+<style>
+  
+body {
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  background-color: #e9e4e6;
+  align-items: center;
+  align-content: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.container{
+  background-color: rgba(255, 255, 255, 0.671);
+  font-family: 'Roboto', sans-serif;
+  width: 1000px;
+}
+
+#b {
+  font-size: 2em;
+  font-family: 'Roboto', sans-serif;
+}
+
+p {
+  font-size: 3em;
+  font-family: 'Roboto', sans-serif;
+}
+
+#ptab {
+  display: none;
+}
+
+#outer-div {
+  display: none;
+  margin: auto;
+  width: 802px;
+  height: 50px;
+  border: 1px solid black;
+}
+
+.block {
+  position: relative;
+  display: none;
+  border-right: 1px solid black;
+  float: left;
+  text-align: center;
+  background-color:rgba(20, 167, 224, 0.747);
+  height: 48px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.bottom {
+  width: 100%;
+  margin-top: 38px;
+  text-align: right;
+  margin-bottom: 1px;
+  font-family: 'Roboto', sans-serif;
+}
+
+</style>
+
+<body>
+
+  <!-- ======= Header ======= -->
+
+  <!-- Change the navbar code here -->
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg" style="background-color: #2c3e50;" data-bs-theme="dark">
+
+    <div class="container-fluid">
+      <a class="navbar-brand" href="../index.html"><strong>OS Simulator</strong></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse " id="navbarNav">
+        <ul class="navbar-nav ms-auto me-4">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="../scheduling.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+<!-- Navbar ends here -->
+
+  <main id="main" style="width: 500px" align="center">
+
+    <!-- ======= Breadcrumbs Section ======= -->
+
+    <div class="container" style="display: block;margin-left: 50%;">
+      <h1 style="padding:40px;">
+        Round-Robin
+      </h1>
+      <br>
+  
+      <br>
+      <div>
+        <table id="ep" class="table table-bordered table-striped" style="width:70%" align="center">
+          <thead class="thead-dark" style="background-color: #337ab7; color: white;">
+            <th>PNO.</th>
+            <th>Arrival Time </th>
+            <th>Burst Time</th>
+  
+            </tr>
+          <tbody id="ept">
+          </tbody>
+          </thead>
+        </table>
+      </div>
+      <div style="width:400px; margin: auto; ">
+        <div class="form-inline">
+          <div class="form-group">
+            <input type='number' class="form-control mb-2 mr-sm-2" min='0' id='at1' placeholder="arrival time"></input>
+          </div>
+  
+          <div class="form-group">
+            <input type='number' class="form-control mb-2 mr-sm-2" id='bt1' placeholder="burst time"></input>
+          </div>
+          <button id="add" class="btn btn-secondary mb-2" ">Add</button>
+  
+    </div>
+    </div>
+    <br>
+    <div style=" width:400px; margin: auto; ">
+      <div class=" form-inline">
+            <div class="form-group">
+              <input type='number' id="tq" class="form-control mb-2 mr-sm-2" placeholder="Time quantum"></input>
+            </div>
+            <button id="start" class="btn btn-secondary mb-2">Start</button>
+        </div>
+      </div>
+      <br>
+      <br>
+  
+      <h2 is="gantt" style="display:none;">
+        Gantt Chart
+      </h2>
+  
+      <div id="outer-div">
+      </div>
+      <br><br><br>
+      <div id="cardAdd">
+        <table id="ptab" class="table table-bordered table-striped" style="width:70%;margin-top:20px; " align="center">
+          <thead class="thead-dark" style="background-color: #337ab7; color: white;">
+            <th>PNO.</th>
+            <th>Arrival time</th>
+            <th>Burst time</th>
+            <th>Waiting time</th>
+            <th>Turn Around Time</th>
+          </thead>
+  
+          <tbody id="ptable">
+          </tbody>
+        </table>
+        <div id="Average"></div>
+      </div>
+    </div>
+  </main><!-- End #main -->
+
+ 
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+
+</body>
+
+</html>

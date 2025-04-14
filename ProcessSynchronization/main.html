@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Synchronization Project</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --dark-color: #2c3e50;
+            --white-color: #ffffff;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--white-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--dark-color);
+            color: var(--white-color);
+            text-align: center;
+            padding: 3rem 0;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        header p {
+            margin: 0.5rem 0 0;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .theory-section {
+            background-color: var(--white-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        h2 {
+            color: var(--dark-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+        
+        .problem-cards {
+            display: flex;
+            justify-content: space-between;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .problem-card {
+            flex: 1;
+            min-width: 250px;
+            background-color: var(--white-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .problem-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.4rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .card-body p {
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--dark-color);
+            color: var(--white-color);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: var(--white-color);
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .problem-cards {
+                flex-direction: column;
+            }
+            
+            .problem-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Process Synchronization</h1>
+        <p>Implementing concurrent programming solutions with semaphores and mutexes</p>
+    </header>
+    
+    <div class="container">
+        <section class="theory-section">
+            <h2>Understanding Process Synchronization</h2>
+            <p>Process synchronization is a fundamental concept in operating systems that involves coordinating the execution of processes to maintain data consistency and prevent race conditions in a concurrent computing environment.</p>
+            
+            <h3>Why Process Synchronization Matters</h3>
+            <p>In modern operating systems, multiple processes may need to access shared resources simultaneously. Without proper synchronization mechanisms, this can lead to:</p>
+            <ul>
+                <li><strong>Race Conditions</strong>: When multiple processes access and manipulate shared data concurrently, resulting in unpredictable outcomes.</li>
+                <li><strong>Deadlocks</strong>: When two or more processes are unable to proceed because each is waiting for resources held by another.</li>
+                <li><strong>Starvation</strong>: When a process is perpetually denied necessary resources.</li>
+                <li><strong>Priority Inversion</strong>: When a high-priority process is indirectly preempted by a lower-priority process.</li>
+            </ul>
+            
+            <h3>Key Synchronization Mechanisms</h3>
+            <p>Several mechanisms are used to implement process synchronization:</p>
+            
+            <h4>Semaphores</h4>
+            <p>A semaphore is a variable that controls access to a common resource in a concurrent system. It consists of:</p>
+            <ul>
+                <li>A counter variable that represents the number of available resources</li>
+                <li>Two atomic operations: wait (P) and signal (V)</li>
+            </ul>
+            <div class="code-block">
+                // Semaphore operations
+                wait(S) {  // Also known as P operation
+                    while (S <= 0); // Busy waiting
+                    S--;
+                }
+                
+                signal(S) {  // Also known as V operation
+                    S++;
+                }
+            </div>
+            
+            <h4>Mutex (Mutual Exclusion)</h4>
+            <p>A mutex is a special type of binary semaphore used to provide mutual exclusion access to a resource. It ensures that only one process can access a critical section at a time.</p>
+            <div class="code-block">
+                // Mutex operations
+                acquire() {  // Lock
+                    while (!available);
+                    available = false;
+                }
+                
+                release() {  // Unlock
+                    available = true;
+                }
+            </div>
+            
+            <h4>Monitors</h4>
+            <p>A monitor is a high-level synchronization construct that encapsulates both data and procedures needed to achieve mutual exclusion and the ability to wait for certain conditions to become true.</p>
+            
+            <h3>Critical Section Problem</h3>
+            <p>The critical section is the part of a program where shared resources are accessed. A good solution must satisfy:</p>
+            <ul>
+                <li><strong>Mutual Exclusion</strong>: Only one process can execute in the critical section at a time.</li>
+                <li><strong>Progress</strong>: If no process is in the critical section, a process that wants to enter must be allowed to do so.</li>
+                <li><strong>Bounded Waiting</strong>: There must be a limit on how many times a process can be bypassed before it is granted access.</li>
+            </ul>
+        </section>
+        
+        <h2>Classical Synchronization Problems</h2>
+        <p>The following are classic problems that illustrate various aspects of process synchronization:</p>
+        
+        <div class="problem-cards">
+            <div class="problem-card">
+                <div class="card-header">
+                    <h3>Reader-Writer Problem</h3>
+                </div>
+                <div class="card-body">
+                    <p>Multiple readers can read simultaneously, but writers need exclusive access. This problem deals with synchronizing access to a shared database.</p>
+                    <button class="btn" onclick="window.location.href = 'reader_writer.html'">Reader-Writer Demo</button>
+                </div>
+            </div>
+            
+            <div class="problem-card">
+                <div class="card-header">
+                    <h3>Dining Philosophers Problem</h3>
+                </div>
+                <div class="card-body">
+                    <p>Five philosophers sit around a table with one fork between each pair. A philosopher needs two forks to eat, illustrating resource allocation challenges.</p>
+                    <button class="btn" onclick="window.location.href = 'dining_philosopher.html'; ">Dining Philosophers Demo</button>
+                </div>
+            </div>
+            
+            <div class="problem-card">
+                <div class="card-header">
+                    <h3>Producer-Consumer Problem</h3>
+                </div>
+                <div class="card-body">
+                    <p>Also known as the bounded buffer problem, it involves producers adding data to a shared buffer and consumers removing it, requiring coordination.</p>
+                    <button class="btn" onclick="window.location.href = 'producer_consumer.html'">Producer-Consumer Demo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Process Synchronization Project &copy; 2025</p>
+    </footer>
+</body>
+</html>
