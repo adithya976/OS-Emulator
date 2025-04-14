@@ -1,49 +1,92 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    padding: 20px;
-  }
-  
-  .container {
-    max-width: 600px;
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    margin: auto;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  }
-  
-  input, select, button {
-    width: 100%;
-    padding: 10px;
-    margin: 12px 0;
-    font-size: 16px;
-  }
-  
-  button {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #218838;
-  }
-  
-  table {
-    width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse;
-  }
-  
-  th, td {
-    padding: 8px;
-    border: 1px solid #ddd;
-    text-align: center;
-  }
-  
-  th {
-    background-color: #f2f2f2;
-  }
-  
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to right, #e0eafc, #cfdef3);
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+
+.container {
+  max-width: 900px;
+  background: #fff;
+  padding: 40px;
+  margin: 40px auto;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  text-align: center;
+  color: #0077b6;
+}
+h1, h2, h3 {
+  font-weight: 600;
+}
+
+ul, p, td, th {
+  font-weight: 400;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+ul li {
+  margin-bottom: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+th {
+  background-color: #ade8f4;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+input:focus, select:focus {
+  border-color: #0077b6;
+  outline: none;
+}
+
+button {
+  background-color: #00b4d8;
+  color: white;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0077b6;
+}
+
+#result {
+  margin-top: 30px;
+}
+
+#result table {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
