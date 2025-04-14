@@ -4,61 +4,49 @@ let currentStep = 0;
 function startSimulation() {
   const inputString = document.getElementById("pages").value;
   const capacity = parseInt(document.getElementById("capacity").value);
-  const t = inputString
-    .split(/[\s,]+/)
-    .map(Number)
-    .filter((n) => !isNaN(n));
+  const pages = inputString.split(/[\s,]+/).map(Number).filter(n => !isNaN(n));
 
   simulationData = [];
   currentStep = 0;
+  let queue = []; // [{ page, ref }]
+  let hits = 0, faults = 0;
 
-  let q = []; // now an array of { page, ref }
-  let hits = 0;
-  let faults = 0;
+  for (let i = 0; i < pages.length; i++) {
+    const page = pages[i];
+    let action = "", hit = false, replaced = null;
+    const index = queue.findIndex(p => p.page === page);
 
-  for (let i = 0; i < t.length; i++) {
-    const page = t[i];
-    let hit = false;
-    let action = '';
-    let pageIndex = q.findIndex(p => p.page === page);
-
-    if (pageIndex === -1) {
-      // MISS
-      if (q.length < capacity) {
-        q.push({ page, ref: false });
-        action = `Page ${page} added (fault, space available)`;
-      } else {
-        let ptr = 0;
-
-        // Second-Chance Replacement Logic
-        while (q[ptr].ref) {
-          q[ptr].ref = false;
-          q.push(q.shift()); // rotate to back
-        }
-
-        q.shift(); // remove the page with ref == 0
-        q.push({ page, ref: false });
-        action = `Page ${page} added (fault, replaced page)`;
-      }
-      faults++;
-    } else {
-      // HIT
-      q[pageIndex].ref = true;
+    if (index !== -1) {
+      queue[index].ref = true;
       hit = true;
       hits++;
-      action = `Page ${page} is a hit`;
+      action = `Page ${page} is a hit. Reference bit set to 1.`;
+    } else {
+      faults++;
+      if (queue.length < capacity) {
+        queue.push({ page, ref: false });
+        action = `Page ${page} added (no replacement).`;
+      } else {
+        while (queue[0].ref) {
+          queue[0].ref = false;
+          queue.push(queue.shift()); // Rotate
+        }
+        replaced = queue[0].page;
+        queue.shift(); // Remove page with ref = 0
+        queue.push({ page, ref: false });
+        action = `Page ${page} replaced page ${replaced}.`;
+      }
     }
 
-    // Save the step state
     simulationData.push({
-      index: i,
+      index: i + 1,
       page,
-      queue: q.map(p => p.page),
-      bitref: q.map(p => p.ref),
-      hit,
       action,
+      hit,
+      replaced,
       hits,
-      faults
+      faults,
+      queue: queue.map(p => ({ ...p }))
     });
   }
 
@@ -66,22 +54,32 @@ function startSimulation() {
 }
 
 function renderStep() {
-  const output = document.getElementById("output");
-  if (simulationData.length === 0) {
-    output.textContent = "Click Start to run the simulation.";
-    return;
-  }
+  if (simulationData.length === 0) return;
 
   const step = simulationData[currentStep];
-  output.innerText =
-    `Step ${step.index + 1}:\n` +
-    `Page Referenced: ${step.page}\n` +
-    `Action: ${step.action}\n` +
-    `Queue: [${step.queue.join(', ')}]\n` +
-    `Reference Bits: [${step.bitref.map(b => b ? 1 : 0).join(', ')}]\n` +
-    `Hit: ${step.hit ? "Yes" : "No"}\n` +
-    `Hits so far: ${step.hits}\n` +
-    `Faults so far: ${step.faults}`;
+
+  document.getElementById("stepCount").innerText = step.index;
+  document.getElementById("pageRef").innerText = step.page;
+  document.getElementById("action").innerText = step.action;
+  document.getElementById("hit").innerText = step.hit ? "Yes ✅" : "No ❌";
+  document.getElementById("hitCount").innerText = step.hits;
+  document.getElementById("faultCount").innerText = step.faults;
+
+  const frameDisplay = document.getElementById("frameDisplay");
+  frameDisplay.innerHTML = "";
+
+  step.queue.forEach(p => {
+    const box = document.createElement("div");
+    box.classList.add("frame-box");
+    if (p.page === step.page && step.hit) box.classList.add("hit");
+    if (p.page === step.replaced) box.classList.add("replaced");
+
+    box.innerHTML = `
+      <div><strong>${p.page}</strong></div>
+      <div class="bit">Bit: ${p.ref ? 1 : 0}</div>
+    `;
+    frameDisplay.appendChild(box);
+  });
 }
 
 function nextStep() {
@@ -99,9 +97,15 @@ function prevStep() {
 }
 
 function resetSimulation() {
-  document.getElementById("pages").value = "";
-  document.getElementById("capacity").value = "";
-  document.getElementById("output").textContent = "";
   simulationData = [];
   currentStep = 0;
+  document.getElementById("frameDisplay").innerHTML = "";
+  document.getElementById("stepCount").innerText = "0";
+  document.getElementById("pageRef").innerText = "-";
+  document.getElementById("action").innerText = "";
+  document.getElementById("hit").innerText = "-";
+  document.getElementById("hitCount").innerText = "0";
+  document.getElementById("faultCount").innerText = "0";
+  document.getElementById("pages").value = "";
+  document.getElementById("capacity").value = "";
 }
