@@ -8,18 +8,27 @@
 </head>
 <body>
   <header>
-    <h1>Operating Systems Simulator</h1>
-    <p>Interactive simulations of core Operating System concepts and algorithms</p>
+    <div style="margin-top: 15px;">
+      <h1>Operating Systems Simulator</h1>
+    </div>
+    <div class="nav-container" style="margin-top: 10px;">
+      <div class="nav-links">
+          <a href="#home">Home</a>
+          <a href="#topics">Topics</a>
+          <a href="#team">Team</a>
+          <a href="#simulations">Simulations</a>
+      </div>
+  </div>
   </header>
 
   <div class="container">
-    <section class="introduction">
+    <section class="introduction" id="home">
       <h2>Welcome to OS Simulator</h2>
       <p>This interactive platform allows you to explore and understand core Operating System concepts through visual simulations. Whether you're a student learning OS fundamentals or an enthusiast refreshing your knowledge, our simulator provides hands-on experience with various OS algorithms and techniques.</p>
       <p>Navigate through different modules to explore process scheduling, memory management, file systems, and more. Each simulation is designed to demonstrate the underlying principles and help you visualize how operating systems work behind the scenes.</p>
     </section>
 
-    <section class="module-info">
+    <!-- <section class="module-info">
       <h2>Operating Systems: Core Concepts</h2>
       <div class="module-info-grid">
         <div class="module-card">
@@ -139,86 +148,214 @@
           </ul>
         </div>
       </div>
-    </section>
-
-    <h2>Interactive Simulation Modules</h2>
-    <div class="card-container">
-      <div class="card" onclick="navigateTo('SystemCalls','SystemCalls')">
-        <h2>System Calls</h2>
-        <p>Analyze and execute different types of system calls that provide the interface between user programs and the operating system.</p>
-      </div>
-
-      <div class="card" onclick="navigateTo('CPUScheduling','scheduling')">
-        <h2>CPU Scheduling</h2>
-        <p>Simulate non-preemptive CPU scheduling algorithms such as FCFS, SJF, Round Robin, and Priority to analyze turnaround time and waiting time.</p>
-      </div>
-
-      <div class="card" onclick="navigateTo('ProcessSynchronization','main')">
-        <h2>Process Synchronization</h2>
-        <p>Explore implementations of Producer-Consumer, Readers-Writers, and Dining-Philosophers problems using semaphores and other synchronization primitives.</p>
-      </div>
-
-      <div class="card" onclick="navigateTo('Deadlock','deadlock')">
-        <h2>Deadlock Management</h2>
-        <p>Understand deadlock avoidance with Banker's algorithm and learn techniques for deadlock detection in resource allocation systems.</p>
-      </div>
-
-      <div class="card" onclick="navigateTo('MemoryManagement','memall')">
-        <h2>Memory Management</h2>
-        <p>Explore memory allocation techniques including Multiprogramming with Variable/Fixed Tasks (MVT/MFT) to visualize memory utilization.</p>
-      </div>
-
-      <div class="card" onclick="navigateTo('contiguousmemoryallocation','index')">
-        <h2>Contiguous Memory Allocation</h2>
-        <p>Visualize and compare different contiguous memory allocation strategies including First-fit, Best-fit, Worst-fit, and Next-fit algorithms.</p>
-      </div>
-
-      <div class="card" onclick="navigateTo('Page-Replacement','page-replacement')">
-        <h2>Page Replacement</h2>
-        <p>Implement and analyze page replacement algorithms including FIFO, Optimal, LRU, and LFU to understand virtual memory management.</p>
-      </div>
-
-      <div class="card" onclick="navigateTo('DiskScheduling','index')">
-        <h2>Disk Scheduling</h2>
-        <p>Simulate disk scheduling algorithms such as FCFS, SCAN, and SSTF to optimize disk access and reduce seek times.</p>
-      </div>
-
-      <div class="card" onclick="navigateTo('FileAllocation','FileAllocation')">
-        <h2>File Allocation</h2>
-        <p>Examine file allocation strategies including Sequential, Indexed, and Linked allocation to understand how files are stored on disk.</p>
-      </div>
-
-      <div class="card" onclick="navigateTo('Directories','DirectoryStructure')">
-        <h2>Directory Structure</h2>
-        <p>Simulate single-level directory file organization techniques to understand file system hierarchies and access methods.</p>
-      </div>
-
-      <div class="card" onclick="navigateTo('lru_approximation','index')">
-        <h2>LRU-Approximation</h2>
-        <p>Analyze and execute different types of system calls that provide the interface between user programs and the operating system.</p>
-      </div>
-
-      <div class="card" onclick="navigateTo('Paging-Simulation','index')">
-        <h2>Paging-Simulator</h2>
-        <p>Analyze and execute different types of system calls that provide the interface between user programs and the operating system.</p>
-      </div>
-
-      <div class="card" onclick="navigateTo('InterProcessCommunication','InterProcessCommunication')">
-        <h2>InterProcessCommunication</h2>
-        <p>Analyze and execute different types of system calls that provide the interface between user programs and the operating system.</p>
-      </div>
-
-      <div class="card" onclick="navigateTo('Hashing','Hashing')">
-        <h2>Hashing</h2>
-        <p>Analyze and execute different types of system calls that provide the interface between user programs and the operating system.</p>
-      </div>
-
-      <div class="card" onclick="navigateTo('Sockets','Sockets')">
-        <h2>Sockets</h2>
-        <p>Analyze and execute different types of system calls that provide the interface between user programs and the operating system.</p>
+    </section> -->
+    <div class="simu" id="simulations" style="margin-top:100px;">
+      <h2>Interactive Simulation Modules</h2>
+      <div class="card-container">
+        <div class="card" onclick="navigateTo('SystemCalls','SystemCalls')">
+          <h2>System Calls</h2>
+          <p>Analyze and execute different types of system calls that provide the interface between user programs and the operating system.</p>
+        </div>
+  
+        <div class="card" onclick="navigateTo('CPUScheduling','scheduling')">
+          <h2>CPU Scheduling</h2>
+          <p>Simulate non-preemptive CPU scheduling algorithms such as FCFS, SJF, Round Robin, and Priority to analyze turnaround time and waiting time.</p>
+        </div>
+  
+        <div class="card" onclick="navigateTo('ProcessSynchronization','main')">
+          <h2>Process Synchronization</h2>
+          <p>Explore implementations of Producer-Consumer, Readers-Writers, and Dining-Philosophers problems using semaphores and other synchronization primitives.</p>
+        </div>
+  
+        <div class="card" onclick="navigateTo('Deadlock','deadlock')">
+          <h2>Deadlock Management</h2>
+          <p>Understand deadlock avoidance with Banker's algorithm and learn techniques for deadlock detection in resource allocation systems.</p>
+        </div>
+  
+        <div class="card" onclick="navigateTo('MemoryManagement','memall')">
+          <h2>Memory Management</h2>
+          <p>Explore memory allocation techniques including Multiprogramming with Variable/Fixed Tasks (MVT/MFT) to visualize memory utilization.</p>
+        </div>
+  
+        <div class="card" onclick="navigateTo('contiguousmemoryallocation','index')">
+          <h2>Contiguous Memory Allocation</h2>
+          <p>Visualize and compare different contiguous memory allocation strategies including First-fit, Best-fit, Worst-fit, and Next-fit algorithms.</p>
+        </div>
+  
+        <div class="card" onclick="navigateTo('Page-Replacement','page-replacement')">
+          <h2>Page Replacement</h2>
+          <p>Implement and analyze page replacement algorithms including FIFO, Optimal, LRU, and LFU to understand virtual memory management.</p>
+        </div>
+  
+        <div class="card" onclick="navigateTo('DiskScheduling','index')">
+          <h2>Disk Scheduling</h2>
+          <p>Simulate disk scheduling algorithms such as FCFS, SCAN, and SSTF to optimize disk access and reduce seek times.</p>
+        </div>
+  
+        <div class="card" onclick="navigateTo('FileAllocation','FileAllocation')">
+          <h2>File Allocation</h2>
+          <p>Examine file allocation strategies including Sequential, Indexed, and Linked allocation to understand how files are stored on disk.</p>
+        </div>
+  
+        <div class="card" onclick="navigateTo('Directories','DirectoryStructure')">
+          <h2>Directory Structure</h2>
+          <p>Simulate single-level directory file organization techniques to understand file system hierarchies and access methods.</p>
+        </div>
+  
+        <div class="card" onclick="navigateTo('lru_approximation','index')">
+          <h2>LRU-Approximation</h2>
+          <p>Analyze and execute different types of system calls that provide the interface between user programs and the operating system.</p>
+        </div>
+  
+        <div class="card" onclick="navigateTo('Paging-Simulation','index')">
+          <h2>Paging-Simulator</h2>
+          <p>Analyze and execute different types of system calls that provide the interface between user programs and the operating system.</p>
+        </div>
+  
+        <div class="card" onclick="navigateTo('InterProcessCommunication','InterProcessCommunication')">
+          <h2>InterProcessCommunication</h2>
+          <p>Analyze and execute different types of system calls that provide the interface between user programs and the operating system.</p>
+        </div>
+  
+        <div class="card" onclick="navigateTo('Hashing','Hashing')">
+          <h2>Hashing</h2>
+          <p>Analyze and execute different types of system calls that provide the interface between user programs and the operating system.</p>
+        </div>
+  
+        <div class="card" onclick="navigateTo('Sockets','Sockets')">
+          <h2>Sockets</h2>
+          <p>Analyze and execute different types of system calls that provide the interface between user programs and the operating system.</p>
+        </div>
       </div>
     </div>
   </div>
+
+
+  <section id="team">
+    <h2 class="section-title" style="margin-top: -80px;">Our Team</h2>
+    <p>Meet our dedicated team members who work hard to make this project a success.</p>
+    
+    <div class="team-container">
+        <!-- Team Member 1 -->
+        <div class="team-member">
+            <div class="member-info">
+                <h3 class="member-name">Prabhav S K</h3>
+                <p class="member-role">231CS141</p>
+                <div class="contribution-container">
+                  <div class="contribution-label">Contribution:</div>
+                  <p class="member-contri">Deadlock, IPC</p>
+              </div>
+            </div>
+        </div>
+        
+        <!-- Team Member 2 -->
+        <div class="team-member">
+            <div class="member-info">
+                <h3 class="member-name">Prahas G R</h3>
+                <p class="member-role">231CS142</p>
+                <div class="contribution-container">
+                  <div class="contribution-label">Contribution:</div>
+                  <p class="member-contri">Memory Management Techniques (MVT & MFT)</p>
+              </div>
+            </div>
+        </div>
+        
+        <!-- Team Member 3 -->
+        <div class="team-member">
+            <div class="member-info">
+                <h3 class="member-name">Pranav Gujjar</h3>
+                <p class="member-role">231CS143</p>
+                <div class="contribution-container">
+                  <div class="contribution-label">Contribution:</div>
+                  <p class="member-contri">Directory Structure</p>
+              </div>
+            </div>
+        </div>
+        
+        <!-- Team Member 4 -->
+        <div class="team-member">
+            <div class="member-info">
+                <h3 class="member-name">Preeti Mondal</h3>
+                <p class="member-role">231CS144</p>
+                <div class="contribution-container">
+                  <div class="contribution-label">Contribution:</div>
+                  <p class="member-contri">Contiguous Memory Allocation, LRU Approximation</p>
+              </div>
+            </div>
+        </div>
+        
+        <!-- Team Member 5 -->
+        <div class="team-member">
+            <div class="member-info">
+                <h3 class="member-name">Preran P</h3>
+                <p class="member-role">231CS145</p>
+                <div class="contribution-container">
+                  <div class="contribution-label">Contribution:</div>
+                  <p class="member-contri">Page Replacement Algorithms</p>
+              </div>
+            </div>
+        </div>
+        
+        <!-- Team Member 6 -->
+        <div class="team-member">
+            <div class="member-info">
+                <h3 class="member-name">R Adithya</h3>
+                <p class="member-role">231CS146</p>
+                <div class="contribution-container">
+                  <div class="contribution-label">Contribution:</div>
+                  <p class="member-contri">File Allocation Strategies</p>
+              </div>
+            </div>
+        </div>
+        
+        <!-- Team Member 7 -->
+        <div class="team-member">
+            <div class="member-info">
+                <h3 class="member-name">Rakshith Ashok</h3>
+                <p class="member-role">231CS147</p>
+                <div class="contribution-container">
+                  <div class="contribution-label">Contribution:</div>
+                  <p class="member-contri">System Calls</p>
+              </div>
+            </div>
+        </div>
+        
+        <!-- Team Member 8 -->
+        <div class="team-member">
+            <div class="member-info">
+                <h3 class="member-name">Raunil Singh</h3>
+                <p class="member-role">231CS148</p><div class="contribution-container">
+                  <div class="contribution-label">Contribution:</div>
+                  <p class="member-contri">Process Synchronization</p>
+              </div>
+            </div>
+        </div>
+        
+        <!-- Team Member 9 -->
+        <div class="team-member">
+            <div class="member-info">
+                <h3 class="member-name">S B L Prateek</h3>
+                <p class="member-role">231CS1419</p>
+                <div class="contribution-container">
+                  <div class="contribution-label">Contribution:</div>
+                  <p class="member-contri">Disk Scheduling Algorithms</p>
+              </div>
+            </div>
+        </div>
+        
+        <!-- Team Member 10 -->
+        <div class="team-member">
+            <div class="member-info">
+                <h3 class="member-name">S V Karthikeya</h3>
+                <p class="member-role">231CS150</p>
+                <div class="contribution-container">
+                  <div class="contribution-label">Contribution:</div>
+                  <p class="member-contri">CPU Scheduling Algorithms</p>
+              </div>
+            </div>
+        </div>
+    </div>
+</section>
 
   <script src="landing.js"></script>
 </body>
