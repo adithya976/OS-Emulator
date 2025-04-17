@@ -15,3 +15,27 @@ function navigateTo(folderName,filename) {
         });
     });
 });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const headers = document.querySelectorAll('.concept-header');
+    
+    headers.forEach(header => {
+        header.addEventListener('click', function() {
+            // Toggle active class on the header
+            this.classList.toggle('active');
+            
+            // Toggle the content visibility
+            const content = this.nextElementSibling;
+            content.classList.toggle('active');
+            
+            // Close other open items
+            headers.forEach(otherHeader => {
+                if (otherHeader !== this && otherHeader.classList.contains('active')) {
+                    otherHeader.classList.remove('active');
+                    otherHeader.nextElementSibling.classList.remove('active');
+                }
+            });
+        });
+    });
+});

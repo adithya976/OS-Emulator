@@ -320,3 +320,140 @@ header h1 {
   font-size: 0.9rem;
   line-height: 1.6;
 }
+
+
+/* Footer Styles */
+.concepts-list {
+  list-style-type: none;
+}
+
+.concept-item {
+  margin-bottom: 18px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.concept-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(44, 62, 80, 0.12);
+}
+
+.concept-header {
+  background-color: #2c3e50;
+  color: white;
+  padding: 16px 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 17px;
+  transition: background-color 0.3s;
+}
+
+.concept-header:hover {
+  background-color: #2980b9;
+}
+
+.concept-header.active {
+  background-color: #2c3e50;
+}
+
+.concept-header .icon {
+  font-size: 16px;
+  transition: transform 0.4s;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.concept-content {
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out, padding 0.3s ease;
+  background-color: white;
+  border-left: 0px solid transparent;
+  border-right: 0px solid transparent;
+  border-bottom: 0px solid transparent;
+}
+
+.concept-content.active {
+  padding: 24px;
+  max-height: 800px;
+  background-color: #eaf2f8; /* Light blue background */
+  border: 1px solid #b3d4fc; /* Slightly bluish border */
+  border-top: none;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.concept-content p {
+  margin-bottom: 16px;
+  line-height: 1.6;
+  color: #34495e;
+  font-size: 16px;
+}
+
+.concept-content ul {
+  margin-left: 24px;
+  margin-bottom: 16px;
+}
+
+.concept-content li {
+  margin-bottom: 10px;
+  line-height: 1.5;
+  color: #34495e;
+  position: relative;
+}
+
+.concept-content li::before {
+  content: "•";
+  color: #3498db;
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+  font-size: 18px;
+}
+
+.concept-header.active .icon {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 768px) {
+  body {
+      padding: 15px;
+  }
+  
+  .container {
+      padding: 20px;
+  }
+  
+  h1 {
+      font-size: 26px;
+  }
+  
+  .concept-header {
+      padding: 14px 18px;
+      font-size: 16px;
+  }
+  
+  .concept-content.active {
+      padding: 18px;
+  }
+}
+
+
+.module-info{
+  background-color: #f9f9fd;
+  padding: 25px;
+  border-radius: 8px;
+  border-left: 5px solid #3498db;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.demo{
+  background: transparent;
+}
