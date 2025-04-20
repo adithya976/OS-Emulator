@@ -1,0 +1,156 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Outfit', sans-serif;
+  }
+  
+  .header-container {
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px 0;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+  .card {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .card-header {
+    font-weight: bold;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .btn-primary {
+    background-color: #2c3e50;
+    border-color: #2c3e50;
+  }
+  
+  .btn-primary:hover {
+    background-color: #1a2530;
+    border-color: #1a2530;
+  }
+  
+  .memory-visual {
+    height: 400px;
+    border: 1px solid #ddd;
+    position: relative;
+    margin: 20px 0;
+    overflow: hidden;
+    background-color: #f8f9fa;
+  }
+  
+  .memory-segment {
+    position: absolute;
+    left: 0;
+    right: 0;
+    background-color: #3498db;
+    color: white;
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    font-size: 12px;
+    transition: all 0.3s;
+    opacity: 0.8;
+  }
+  
+  .memory-segment.highlighted {
+    border: 3px solid #e74c3c;
+    z-index: 100;
+    opacity: 1;
+  }
+  
+  .memory-segment.free {
+    background-color: #ecf0f1;
+    color: #7f8c8d;
+    border: 1px dashed #bdc3c7;
+  }
+  
+  .memory-marker {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #ddd;
+  }
+  
+  .memory-marker-label {
+    position: absolute;
+    right: 5px;
+    font-size: 10px;
+    color: #7f8c8d;
+  }
+  
+  #execution-steps {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .step-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .step-marker {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #2c3e50;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 12px;
+  }
+  
+  .lead {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  
+  .segment-legend {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  
+  .segment-legend-item {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+    margin-bottom: 5px;
+  }
+  
+  .segment-legend-color {
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    margin-right: 5px;
+  }
+  
+  /* Process colors for segments */
+  .process-0 { background-color: #3498db; }
+  .process-1 { background-color: #2ecc71; }
+  .process-2 { background-color: #e74c3c; }
+  .process-3 { background-color: #f39c12; }
+  .process-4 { background-color: #9b59b6; }
+  .process-5 { background-color: #1abc9c; }
+  .process-6 { background-color: #d35400; }
+  .process-7 { background-color: #34495e; }
+  
+  /* Animation for segment allocation */
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  .pulse {
+    animation: pulse 0.5s;
+  }
+  

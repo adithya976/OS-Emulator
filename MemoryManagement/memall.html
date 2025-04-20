@@ -83,28 +83,7 @@
           </div>
         </div>
 
-        <h4>Allocation Strategies in MVT:</h4>
-        <p>Several strategies are used to allocate memory blocks to processes:</p>
-        <div class="strategies-container">
-          <div class="strategy">
-            <h5>First Fit</h5>
-            <p>Allocates the first available block that is large enough for the process. This algorithm starts searching from the beginning of memory and allocates the first free block that is big enough.</p>
-            <p><strong>Pros:</strong> Fast allocation, minimal searching overhead</p>
-            <p><strong>Cons:</strong> Can lead to many small fragments near the beginning of memory</p>
-          </div>
-          <div class="strategy">
-            <h5>Best Fit</h5>
-            <p>Allocates the smallest available block that is large enough for the process. This minimizes wasted space but requires searching the entire memory.</p>
-            <p><strong>Pros:</strong> Minimizes wasted memory space</p>
-            <p><strong>Cons:</strong> Slower allocation, tends to create very small unusable fragments</p>
-          </div>
-          <div class="strategy">
-            <h5>Worst Fit</h5>
-            <p>Allocates the largest available block to a process. The idea is to leave behind large enough fragments that can be used by other processes.</p>
-            <p><strong>Pros:</strong> Leaves larger free blocks for future allocations</p>
-            <p><strong>Cons:</strong> Slower allocation, can lead to inefficient memory usage over time</p>
-          </div>
-        </div>
+        
       </div>
     </section>
 
