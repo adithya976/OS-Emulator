@@ -104,10 +104,41 @@ function nextFit(blocks, processes) {
 }
 
 function displayResult(processes, alloc) {
-  let html = `<h3>📋 Allocation Results</h3><table><tr><th>Process No.</th><th>Size</th><th>Block No.</th></tr>`;
+  const blockSizes = document.getElementById("blocks").value.split(",").map(Number);
+  let blocks = blockSizes.map(size => ({ original: size, remaining: size, processes: [] }));
+
+  for (let i = 0; i < processes.length; i++) {
+    const blockIndex = alloc[i];
+    if (blockIndex !== -1) {
+      blocks[blockIndex].processes.push({ id: i + 1, size: processes[i] });
+      blocks[blockIndex].remaining -= processes[i];
+    }
+  }
+
+  let html = `<h3>📋 Allocation Results</h3>
+              <div class="block-visualization">`;
+
+  blocks.forEach((block, idx) => {
+    html += `<div class="block">
+               <div class="block-header">Block ${idx + 1} (${block.original} KB)</div>`;
+    block.processes.forEach(proc => {
+      html += `<div class="process" title="Process ${proc.id}">${proc.size} KB (P${proc.id})</div>`;
+    });
+    if (block.remaining > 0) {
+      html += `<div class="free-space">${block.remaining} KB Free</div>`;
+    }
+    if (block.processes.length === 0) {
+      html += `<div class="free-space full">${block.original} KB Free</div>`;
+    }
+    html += `</div>`;
+  });
+
+  html += `</div><table><tr><th>Process No.</th><th>Size</th><th>Block No.</th></tr>`;
+
   for (let i = 0; i < processes.length; i++) {
     html += `<tr><td>${i + 1}</td><td>${processes[i]}</td><td>${alloc[i] !== -1 ? alloc[i] + 1 : "Not Allocated"}</td></tr>`;
   }
   html += `</table>`;
   document.getElementById("result").innerHTML = html;
 }
+

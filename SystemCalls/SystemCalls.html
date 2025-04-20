@@ -1,160 +1,794 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS System Call Simulator</title>
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --light: #e8f1f5;
+            --dark: #333;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .flex-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .panel {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
+        
+        .left-panel {
+            flex: 1;
+        }
+        
+        .right-panel {
+            flex: 1.5;
+        }
 
-<title>System Call Examples</title>
-<style>
-  body {
-    background-color: white;
-    color: black;
-    font-weight: bold;
-  }
-  .section {
-    border: 2px solid black;
-    padding: 10px;
-    margin-bottom: 20px;
-  }
-</style>
+        .system-call-item {
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .system-call-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .system-call-item.active {
+            background: #e7f1ff;
+            border-left: 4px solid var(--primary);
+            font-weight: 600;
+        }
+
+        .process-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+
+        .process-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+        }
+
+        .status-running {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-terminated {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .terminal {
+            background: #1e1e1e;
+            color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            height: 300px;
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+
+        .cmd-line {
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+
+        .prompt {
+            color: #4CAF50;
+            margin-right: 10px;
+        }
+
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #execute-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        #execute-btn:hover {
+            background: var(--secondary);
+        }
+
+        #clear-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        #clear-btn:hover {
+            background: #5a6268;
+        }
+
+        .explanation {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin: 15px 0;
+        }
+
+        .explanation h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .explanation ul {
+            margin-left: 20px;
+        }
+
+        .explanation li {
+            margin: 5px 0;
+        }
+
+        /* Quiz Styles */
+        .quiz-section {
+            margin-top: 20px;
+        }
+
+        .quiz-intro {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: var(--secondary);
+        }
+
+        .question {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .question h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .options label:hover {
+            background-color: #f8f9fa;
+        }
+
+        .quiz-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .quiz-results {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .feedback-item {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .feedback-item.correct {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .feedback-item.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        #take-quiz {
+            background: var(--success);
+            color: white;
+            margin-left: 10px;
+        }
+
+        #submit-quiz {
+            background: var(--success);
+            color: white;
+        }
+
+        #retry-quiz {
+            background: var(--primary);
+            color: white;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>OS System Call Simulator</h1>
+            <p>Learn about operating system calls through interactive simulations</p>
+        </header>
 
-  <nav class="navbar bg-primary navbar-expand-lg" data-bs-theme="dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="../index.html">OS Simulator</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse " id="navbarNav">
-        <ul class="navbar-nav ms-auto me-4">
-          <li class="nav-item">
-          </li>
-          <li class="nav-item">
-          </li>
-        </ul>
-      </div>
+        <div class="flex-container">
+            <div class="panel left-panel">
+                <h2>System Calls</h2>
+                <ul class="system-call-list" id="system-call-list">
+                    <li class="system-call-item active" data-call="fork">fork() - Create Process</li>
+                    <li class="system-call-item" data-call="exec">exec() - Execute Program</li>
+                    <li class="system-call-item" data-call="open">open() - Open File</li>
+                    <li class="system-call-item" data-call="read">read() - Read Data</li>
+                    <li class="system-call-item" data-call="write">write() - Write Data</li>
+                    <li class="system-call-item" data-call="wait">wait() - Wait for Child</li>
+                    <li class="system-call-item" data-call="exit">exit() - Terminate Process</li>
+                    <li class="system-call-item" data-call="close">close() - Close File</li>
+                </ul>
+
+                <div class="process-list" id="process-list">
+                    <h3>Active Processes</h3>
+                    <div id="process-container">
+                        <div class="process-item">
+                            <span>PID: 1 (init)</span>
+                            <span class="process-status status-running">Running</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel right-panel">
+                <div class="info-bar">
+                    <span id="current-call">Current Call: fork()</span>
+                    <span id="system-status">System Status: Normal</span>
+                </div>
+                
+                <div class="terminal" id="terminal">
+                    <div class="cmd-line">
+                        <span class="prompt">user@os-sim:~$</span>
+                        <span class="cmd-text">Welcome to the OS System Call Simulator!</span>
+                    </div>
+                </div>
+
+                <div class="explanation" id="explanation">
+                    <h3>fork() System Call</h3>
+                    <p>The fork() system call creates a new process by duplicating the calling process. The new process is called the child process, and the calling process is the parent process.</p>
+                    <p>When fork() is called:</p>
+                    <ul>
+                        <li>A new process is created with a unique process ID (PID)</li>
+                        <li>The child process is an exact copy of the parent process</li>
+                        <li>The return value helps distinguish between parent and child:
+                            <ul>
+                                <li>In the parent process: fork() returns the PID of the child</li>
+                                <li>In the child process: fork() returns 0</li>
+                                <li>If an error occurs: fork() returns -1</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="controls">
+                    <button id="execute-btn">Execute System Call</button>
+                    <button id="clear-btn">Clear Terminal</button>
+                    <button id="take-quiz">Take Quiz</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="panel quiz-section" id="quiz-section" style="display: none;">
+            <h2>System Calls Quiz</h2>
+            <p class="quiz-intro">Test your knowledge of system calls with these questions!</p>
+            
+            <div class="quiz-container">
+                <div class="question" id="q1">
+                    <h3>Question 1:</h3>
+                    <p>What system call is used to create a new process that is an exact copy of the calling process?</p>
+                    <div class="options">
+                        <label><input type="radio" name="q1" value="a"> a) exec()</label>
+                        <label><input type="radio" name="q1" value="b"> b) fork()</label>
+                        <label><input type="radio" name="q1" value="c"> c) create()</label>
+                        <label><input type="radio" name="q1" value="d"> d) spawn()</label>
+                    </div>
+                </div>
+
+                <div class="question" id="q2">
+                    <h3>Question 2:</h3>
+                    <p>Which system call is used to wait for a child process to terminate?</p>
+                    <div class="options">
+                        <label><input type="radio" name="q2" value="a"> a) sleep()</label>
+                        <label><input type="radio" name="q2" value="b"> b) pause()</label>
+                        <label><input type="radio" name="q2" value="c"> c) wait()</label>
+                        <label><input type="radio" name="q2" value="d"> d) hold()</label>
+                    </div>
+                </div>
+
+                <div class="question" id="q3">
+                    <h3>Question 3:</h3>
+                    <p>What is the correct sequence of system calls for opening a file, reading from it, and then closing it?</p>
+                    <div class="options">
+                        <label><input type="radio" name="q3" value="a"> a) read() → open() → close()</label>
+                        <label><input type="radio" name="q3" value="b"> b) open() → read() → close()</label>
+                        <label><input type="radio" name="q3" value="c"> c) open() → close() → read()</label>
+                        <label><input type="radio" name="q3" value="d"> d) read() → close() → open()</label>
+                    </div>
+                </div>
+
+                <div class="question" id="q4">
+                    <h3>Question 4:</h3>
+                    <p>What does the exec() system call do?</p>
+                    <div class="options">
+                        <label><input type="radio" name="q4" value="a"> a) Creates a new process</label>
+                        <label><input type="radio" name="q4" value="b"> b) Terminates the current process</label>
+                        <label><input type="radio" name="q4" value="c"> c) Replaces the current process with a new program</label>
+                        <label><input type="radio" name="q4" value="d"> d) Pauses the current process</label>
+                    </div>
+                </div>
+
+                <div class="question" id="q5">
+                    <h3>Question 5:</h3>
+                    <p>What is returned by a successful fork() system call in the child process?</p>
+                    <div class="options">
+                        <label><input type="radio" name="q5" value="a"> a) 1</label>
+                        <label><input type="radio" name="q5" value="b"> b) -1</label>
+                        <label><input type="radio" name="q5" value="c"> c) Parent's PID</label>
+                        <label><input type="radio" name="q5" value="d"> d) 0</label>
+                    </div>
+                </div>
+
+                <div class="quiz-controls">
+                    <button id="submit-quiz" class="btn">Submit Quiz</button>
+                    <button id="retry-quiz" class="btn" style="display: none;">Try Again</button>
+                </div>
+
+                <div id="quiz-results" class="quiz-results" style="display: none;">
+                    <h3>Quiz Results</h3>
+                    <p>Your score: <span id="score">0</span>/5</p>
+                    <div id="feedback"></div>
+                </div>
+            </div>
+        </div>
     </div>
-  </nav><br>
-<h1><center>System Calls</center></h1>
 
-<div class="section">
-  <h2>Fork System Call</h2>
-  <p>The fork system call creates a new process, which is an exact copy of the calling process.</p>
-  <h3>Syntax</h3>
-  <pre>
-  pid_t fork(void);
-  </pre>
-  <h3>Explanation</h3>
-  <p>The fork() system call is used to create a new process. The new process created by fork() is called the child process, and the process that calls fork() is the parent process.</p>
-  <h3>Example</h3>
-  <pre>
-  #include &lt;stdio.h&gt;
-  #include &lt;unistd.h&gt;
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const systemCallList = document.getElementById('system-call-list');
+            const terminal = document.getElementById('terminal');
+            const explanation = document.getElementById('explanation');
+            const executeBtn = document.getElementById('execute-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const currentCallDisplay = document.getElementById('current-call');
+            const systemStatus = document.getElementById('system-status');
+            const processContainer = document.getElementById('process-container');
+            
+            let currentSystemCall = 'fork';
+            let nextPid = 2;
+            let fdCounter = 3;
+            let openFiles = [];
+            let processes = [
+                { pid: 1, name: 'init', status: 'running' }
+            ];
+            
+            const systemCallExplanations = {
+                fork: `<h3>fork() System Call</h3>
+                    <p>The fork() system call creates a new process by duplicating the calling process. The new process is called the child process, and the calling process is the parent process.</p>
+                    <p>When fork() is called:</p>
+                    <ul>
+                        <li>A new process is created with a unique process ID (PID)</li>
+                        <li>The child process is an exact copy of the parent process</li>
+                        <li>The return value helps distinguish between parent and child:
+                            <ul>
+                                <li>In the parent process: fork() returns the PID of the child</li>
+                                <li>In the child process: fork() returns 0</li>
+                                <li>If an error occurs: fork() returns -1</li>
+                            </ul>
+                        </li>
+                    </ul>`,
+                
+                exec: `<h3>exec() System Call</h3>
+                    <p>The exec() family of system calls replaces the current process image with a new process image. It loads a binary executable into memory and starts execution.</p>
+                    <p>Key features of exec():</p>
+                    <ul>
+                        <li>Unlike fork(), exec() doesn't create a new process - it transforms the existing one</li>
+                        <li>The process ID remains the same before and after the call</li>
+                        <li>The new program starts from its main() function</li>
+                        <li>Upon successful execution, exec() never returns to the calling process</li>
+                        <li>If it fails, it returns -1 and sets an error code</li>
+                    </ul>`,
+                
+                open: `<h3>open() System Call</h3>
+                    <p>The open() system call opens a file or device and returns a file descriptor.</p>
+                    <p>Syntax: int open(const char *pathname, int flags, mode_t mode)</p>
+                    <ul>
+                        <li>pathname: Path to the file to be opened</li>
+                        <li>flags: Access mode (O_RDONLY, O_WRONLY, O_RDWR) and other optional flags</li>
+                        <li>mode: File permissions (if creating a file)</li>
+                        <li>Returns a non-negative integer (file descriptor) on success, or -1 on error</li>
+                    </ul>
+                    <p>The file descriptor is used in subsequent system calls like read(), write(), and close().</p>`,
+                
+                read: `<h3>read() System Call</h3>
+                    <p>The read() system call reads data from a file descriptor into a buffer.</p>
+                    <p>Syntax: ssize_t read(int fd, void *buf, size_t count)</p>
+                    <ul>
+                        <li>fd: File descriptor to read from</li>
+                        <li>buf: Buffer to store the read data</li>
+                        <li>count: Maximum number of bytes to read</li>
+                        <li>Returns the number of bytes read, 0 at end of file, or -1 on error</li>
+                    </ul>
+                    <p>A file descriptor must be opened with read permissions before read() is called.</p>`,
+                
+                write: `<h3>write() System Call</h3>
+                    <p>The write() system call writes data from a buffer to a file descriptor.</p>
+                    <p>Syntax: ssize_t write(int fd, const void *buf, size_t count)</p>
+                    <ul>
+                        <li>fd: File descriptor to write to</li>
+                        <li>buf: Buffer containing the data to write</li>
+                        <li>count: Number of bytes to write</li>
+                        <li>Returns the number of bytes written, or -1 on error</li>
+                    </ul>
+                    <p>A file descriptor must be opened with write permissions before write() is called.</p>`,
+                
+                close: `<h3>close() System Call</h3>
+                    <p>The close() system call closes a file descriptor, freeing it for reuse.</p>
+                    <p>Syntax: int close(int fd)</p>
+                    <ul>
+                        <li>fd: File descriptor to close</li>
+                        <li>Returns 0 on success, or -1 on error</li>
+                    </ul>
+                    <p>When a process terminates, all its open file descriptors are automatically closed by the kernel.</p>
+                    <p>It's good practice to close file descriptors when they're no longer needed to free up system resources.</p>`,
+                
+                wait: `<h3>wait() System Call</h3>
+                    <p>The wait() system call suspends execution of the calling process until one of its children terminates.</p>
+                    <p>Syntax: pid_t wait(int *status)</p>
+                    <ul>
+                        <li>status: Optional pointer to store the exit status of the terminated child</li>
+                        <li>Returns the PID of the terminated child, or -1 on error</li>
+                    </ul>
+                    <p>This call is often used by a parent process to collect the exit status of a child process and prevent zombie processes.</p>`,
+                
+                exit: `<h3>exit() System Call</h3>
+                    <p>The exit() system call terminates the calling process and returns an exit status to the parent.</p>
+                    <p>Syntax: void exit(int status)</p>
+                    <ul>
+                        <li>status: Exit status code (0 typically indicates success, non-zero indicates an error)</li>
+                        <li>This call never returns</li>
+                    </ul>
+                    <p>When a process calls exit(), all its resources are released, but its entry remains in the process table until the parent calls wait().</p>`
+            };
 
-  int main() {
-      pid_t pid;
-      pid = fork();
-      if (pid == 0) {
-          printf("Child process\n");
-      } else if (pid > 0) {
-          printf("Parent process\n");
-      } else {
-          printf("Fork failed\n");
-      }
-      return 0;
-  }
-  </pre>
-</div>
+            function writeToTerminal(text) {
+                const line = document.createElement('div');
+                line.className = 'cmd-line';
+                line.innerHTML = `<span class="prompt">user@os-sim:~$</span><span class="cmd-text">${text}</span>`;
+                terminal.appendChild(line);
+                terminal.scrollTop = terminal.scrollHeight;
+            }
 
-<div class="section">
-  <h2>Kill System Call</h2>
-  <p>The kill system call is used to send a signal to a process or a group of processes.</p>
-  <h3>Syntax</h3>
-  <pre>
-  int kill(pid_t pid, int sig);
-  </pre>
-  <h3>Explanation</h3>
-  <p>This call sends a signal specified by <code>sig</code> to the process identified by <code>pid</code>.</p>
-  <h3>Example</h3>
-  <pre>
-  #include &lt;stdio.h&gt;
-  #include &lt;signal.h&gt;
+            function updateProcessList() {
+                processContainer.innerHTML = '';
+                processes.forEach(process => {
+                    const div = document.createElement('div');
+                    div.className = 'process-item';
+                    div.innerHTML = `
+                        <span>PID: ${process.pid} (${process.name})</span>
+                        <span class="process-status status-${process.status}">${process.status}</span>
+                    `;
+                    processContainer.appendChild(div);
+                });
+            }
 
-  int main() {
-      int pid = 1234; // PID of the target process
-      int sig = SIGKILL; // Signal to send (kill the process)
-      int result = kill(pid, sig);
-      if (result == 0) {
-          printf("Process with PID %d killed successfully.\n", pid);
-      } else {
-          perror("kill");
-      }
-      return 0;
-  }
-  </pre>
-</div>
+            const systemCallImplementations = {
+                fork: () => {
+                    const childPid = nextPid++;
+                    processes.push({ pid: childPid, name: `process-${childPid}`, status: 'running' });
+                    
+                    writeToTerminal(`fork() called by PID ${1}`);
+                    writeToTerminal(`New child process created with PID ${childPid}`);
+                    writeToTerminal(`In parent process (PID 1): fork() returned ${childPid}`);
+                    writeToTerminal(`In child process (PID ${childPid}): fork() returned 0`);
+                    
+                    updateProcessList();
+                    systemStatus.textContent = "System Status: Process created";
+                },
+                
+                exec: () => {
+                    if (processes.length <= 1) {
+                        writeToTerminal("Error: No child process available to execute exec()");
+                        return;
+                    }
+                    
+                    const targetProcess = processes.find(p => p.pid !== 1);
+                    const oldName = targetProcess.name;
+                    targetProcess.name = "new-program";
+                    
+                    writeToTerminal(`exec("/bin/new-program") called by PID ${targetProcess.pid}`);
+                    writeToTerminal(`Process ${targetProcess.pid} (${oldName}) image replaced with new-program`);
+                    
+                    updateProcessList();
+                    systemStatus.textContent = "System Status: Process image replaced";
+                },
+                
+                open: () => {
+                    const fd = fdCounter++;
+                    const fileName = "example.txt";
+                    openFiles.push({ fd, name: fileName });
+                    
+                    writeToTerminal(`open("${fileName}", O_RDWR) called`);
+                    writeToTerminal(`File "${fileName}" opened with file descriptor ${fd}`);
+                    
+                    systemStatus.textContent = `System Status: FD ${fd} opened`;
+                },
+                
+                read: () => {
+                    if (openFiles.length === 0) {
+                        writeToTerminal("Error: No file descriptors open to read from");
+                        return;
+                    }
+                    
+                    const file = openFiles[openFiles.length - 1];
+                    writeToTerminal(`read(${file.fd}, buffer, 1024) called`);
+                    writeToTerminal(`Read 1024 bytes from file descriptor ${file.fd} ("${file.name}")`);
+                    
+                    systemStatus.textContent = `System Status: Read from FD ${file.fd}`;
+                },
+                
+                write: () => {
+                    if (openFiles.length === 0) {
+                        writeToTerminal("Error: No file descriptors open to write to");
+                        return;
+                    }
+                    
+                    const file = openFiles[openFiles.length - 1];
+                    writeToTerminal(`write(${file.fd}, buffer, 512) called`);
+                    writeToTerminal(`Wrote 512 bytes to file descriptor ${file.fd} ("${file.name}")`);
+                    
+                    systemStatus.textContent = `System Status: Write to FD ${file.fd}`;
+                },
+                
+                close: () => {
+                    if (openFiles.length === 0) {
+                        writeToTerminal("Error: No file descriptors open to close");
+                        return;
+                    }
+                    
+                    const file = openFiles.pop();
+                    writeToTerminal(`close(${file.fd}) called`);
+                    writeToTerminal(`File descriptor ${file.fd} ("${file.name}") closed`);
+                    
+                    systemStatus.textContent = `System Status: FD ${file.fd} closed`;
+                },
+                
+                wait: () => {
+                    if (processes.length <= 1) {
+                        writeToTerminal("Error: No child processes available for wait()");
+                        return;
+                    }
+                    
+                    const childPid = processes.find(p => p.pid !== 1).pid;
+                    writeToTerminal(`wait(NULL) called by PID 1`);
+                    writeToTerminal(`Parent process (PID 1) is waiting for child to terminate`);
+                    
+                    systemStatus.textContent = "System Status: Parent waiting";
+                },
+                
+                exit: () => {
+                    if (processes.length <= 1) {
+                        writeToTerminal("Error: Cannot terminate the init process");
+                        return;
+                    }
+                    
+                    const terminatedProcess = processes.find(p => p.pid !== 1);
+                    terminatedProcess.status = 'terminated';
+                    
+                    writeToTerminal(`exit(0) called by PID ${terminatedProcess.pid}`);
+                    writeToTerminal(`Process ${terminatedProcess.pid} terminated with exit code 0`);
+                    
+                    updateProcessList();
+                    systemStatus.textContent = `System Status: Process ${terminatedProcess.pid} terminated`;
+                }
+            };
 
-<div class="section">
-  <h2>Wait System Call</h2>
-  <p>The wait system call suspends execution of the calling process until one of its children terminates.</p>
-  <h3>Syntax</h3>
-  <pre>
-  pid_t wait(int *status);
-  </pre>
-  <h3>Explanation</h3>
-  <p>When a child process terminates, the parent process is awakened, and the status of the child process is stored in the location pointed to by <code>status</code>.</p>
-  <h3>Example</h3>
-  <pre>
-  #include &lt;stdio.h&gt;
-  #include &lt;sys/wait.h&gt;
+            // Quiz functionality
+            const quizSection = document.getElementById('quiz-section');
+            const submitQuizBtn = document.getElementById('submit-quiz');
+            const retryQuizBtn = document.getElementById('retry-quiz');
+            const quizResults = document.getElementById('quiz-results');
+            const scoreDisplay = document.getElementById('score');
+            const feedbackDiv = document.getElementById('feedback');
+            const takeQuizBtn = document.getElementById('take-quiz');
 
-  int main() {
-      int status;
-      pid_t pid = fork();
-      if (pid == 0) {
-          // Child process
-          printf("Child process\n");
-          return 42;
-      } else if (pid > 0) {
-          // Parent process
-          wait(&status);
-          printf("Child process exited with status: %d\n", status);
-      } else {
-          perror("fork");
-      }
-      return 0;
-  }
-  </pre>
-</div>
+            const correctAnswers = {
+                q1: 'b', // fork()
+                q2: 'c', // wait()
+                q3: 'b', // open() → read() → close()
+                q4: 'c', // Replaces the current process
+                q5: 'd'  // 0
+            };
 
-<div class="section">
-  <h2>Open System Call</h2>
-  <p>The open system call is used to open or create a file.</p>
-  <h3>Syntax</h3>
-  <pre>
-  int open(const char *pathname, int flags, mode_t mode);
-  </pre>
-  <h3>Explanation</h3>
-  <p>This call opens the file specified by <code>pathname</code> with the specified <code>flags</code> and <code>mode</code>.</p>
-  <h3>Example</h3>
-  <pre>
-  #include &lt;stdio.h&gt;
-  #include &lt;fcntl.h&gt;
+            takeQuizBtn.addEventListener('click', () => {
+                quizSection.style.display = 'block';
+                quizResults.style.display = 'none';
+                retryQuizBtn.style.display = 'none';
+                submitQuizBtn.style.display = 'block';
+                document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+                quizSection.scrollIntoView({ behavior: 'smooth' });
+            });
 
-  int main() {
-      int fd = open("example.txt", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-      if (fd != -1) {
-          printf("File opened successfully with file descriptor: %d\n", fd);
-          close(fd);
-      } else {
-          perror("open");
-      }
-      return 0;
-  }
-  </pre>
-</div>
+            submitQuizBtn.addEventListener('click', () => {
+                let score = 0;
+                let feedback = '';
 
+                for (let i = 1; i <= 5; i++) {
+                    const question = document.querySelector(`input[name="q${i}"]:checked`);
+                    if (!question) {
+                        alert('Please answer all questions!');
+                        return;
+                    }
+                    
+                    const isCorrect = question.value === correctAnswers[`q${i}`];
+                    if (isCorrect) score++;
+
+                    feedback += `
+                        <div class="feedback-item ${isCorrect ? 'correct' : 'incorrect'}">
+                            Question ${i}: ${isCorrect ? 'Correct!' : 'Incorrect.'} 
+                            ${!isCorrect ? `The correct answer was option ${correctAnswers[`q${i}`].toUpperCase()}.` : ''}
+                        </div>
+                    `;
+                }
+
+                scoreDisplay.textContent = score;
+                feedbackDiv.innerHTML = feedback;
+                quizResults.style.display = 'block';
+                submitQuizBtn.style.display = 'none';
+                retryQuizBtn.style.display = 'block';
+            });
+
+            retryQuizBtn.addEventListener('click', () => {
+                document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+                quizResults.style.display = 'none';
+                retryQuizBtn.style.display = 'none';
+                submitQuizBtn.style.display = 'block';
+            });
+
+            systemCallList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('system-call-item')) {
+                    const selectedCall = e.target.textContent;
+                    const explanation = systemCallExplanations[selectedCall];
+                    
+                    currentCallDisplay.innerHTML = explanation;
+                    systemStatus.textContent = `System Status: Executing ${selectedCall}`;
+                    
+                    const implementation = systemCallImplementations[selectedCall];
+                    if (implementation) {
+                        implementation();
+                    }
+                }
+            });
+
+            // Initialize the system
+            updateProcessList();
+            writeToTerminal("Welcome to the OS System Call Simulator!");
+            writeToTerminal("Type 'help' to get started.");
+            
+            // Add event listeners for key presses
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const currentLine = terminal.querySelector('.cmd-line');
+                    if (currentLine) {
+                        const cmdText = currentLine.querySelector('.cmd-text').textContent;
+                        const command = cmdText.trim();
+                        
+                        if (command === 'help') {
+                            writeToTerminal(`Available commands:
+                                fork() - Create a new process
+                                exec() - Replace current process with new program
+                                open() - Open a file
+                                read() - Read from a file
+                                write() - Write to a file
+                                close() - Close a file
+                                wait() - Wait for a child process to terminate
+                                exit() - Terminate the current process
+                                help - Display available commands
+                                clear - Clear the terminal
+                                quiz - Take a quiz
+                                `);
+                        } else if (command === 'clear') {
+                            terminal.innerHTML = '';
+                        } else if (command === 'quiz') {
+                            takeQuizBtn.click();
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Load Balancing Algorithms Simulation</title>
+  <link rel="stylesheet" href="load-balancing.css">
+</head>
+<body>
+  <header>
+    <h1>Load Balancing in Multiprocessor Systems</h1>
+  </header>
+  <main>
+    <section id="introduction">
+      <h2>Introduction to Load Balancing</h2>
+      <p>Load balancing is a critical aspect of multiprocessor and distributed systems that ensures efficient distribution of workloads across multiple processors or computing resources.</p>
+      
+      <h3>What is Load Balancing?</h3>
+      <p>Load balancing refers to the process of distributing a set of tasks or processes across multiple processors to optimize resource use, maximize throughput, minimize response time, and avoid overload of any single resource.</p>
+      
+      <h3>Why is Load Balancing Important?</h3>
+      <p>Effective load balancing provides several benefits:</p>
+      <ul>
+        <li><strong>Resource Utilization:</strong> Maximizes use of all available processors</li>
+        <li><strong>Performance:</strong> Reduces task completion time and improves throughput</li>
+        <li><strong>Scalability:</strong> Allows systems to handle increased workloads</li>
+        <li><strong>Fault Tolerance:</strong> Provides redundancy if one processor fails</li>
+        <li><strong>Energy Efficiency:</strong> Can reduce power consumption by distributing load optimally</li>
+      </ul>
+    </section>
+
+    <section id="algorithms">
+      <h2>Load Balancing Algorithms</h2>
+
+      <div class="algorithm">
+        <h3>1. Round Robin</h3>
+        <p>The simplest load balancing algorithm that distributes tasks equally to each processor in circular order without considering the current load state.</p>
+        
+        <div class="algorithm-details">
+          <div class="algorithm-pros">
+            <h4>Advantages:</h4>
+            <ul>
+              <li>Simple to implement</li>
+              <li>No overhead of collecting load information</li>
+              <li>Works well with homogeneous tasks and processors</li>
+            </ul>
+          </div>
+          
+          <div class="algorithm-cons">
+            <h4>Disadvantages:</h4>
+            <ul>
+              <li>Doesn't consider current processor load</li>
+              <li>Can lead to imbalance with heterogeneous tasks</li>
+              <li>Not optimal for tasks with varying execution times</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="algorithm">
+        <h3>2. Least Connections</h3>
+        <p>Directs new tasks to the processor with the fewest active connections or tasks. This approach considers current load when making assignment decisions.</p>
+        
+        <div class="algorithm-details">
+          <div class="algorithm-pros">
+            <h4>Advantages:</h4>
+            <ul>
+              <li>Better distribution than round robin</li>
+              <li>Adapts to varying task lengths</li>
+              <li>Works well with heterogeneous processors</li>
+            </ul>
+          </div>
+          
+          <div class="algorithm-cons">
+            <h4>Disadvantages:</h4>
+            <ul>
+              <li>Requires tracking active tasks</li>
+              <li>Doesn't consider task complexity or processor speed</li>
+              <li>Can be suboptimal if tasks have very different resource requirements</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="algorithm">
+        <h3>3. Weighted Round Robin</h3>
+        <p>An extension of round robin that assigns tasks to processors based on predefined weights that typically represent processing capacity.</p>
+        
+        <div class="algorithm-details">
+          <div class="algorithm-pros">
+            <h4>Advantages:</h4>
+            <ul>
+              <li>Accounts for different processor capabilities</li>
+              <li>Better utilization of high-performance processors</li>
+              <li>Still relatively simple to implement</li>
+            </ul>
+          </div>
+          
+          <div class="algorithm-cons">
+            <h4>Disadvantages:</h4>
+            <ul>
+              <li>Requires knowledge of processor capabilities</li>
+              <li>Static weights may not reflect current conditions</li>
+              <li>Doesn't adapt to changing workloads</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="algorithm">
+        <h3>4. Least Response Time</h3>
+        <p>Selects the processor with the lowest average response time, which typically indicates the least loaded processor.</p>
+        
+        <div class="algorithm-details">
+          <div class="algorithm-pros">
+            <h4>Advantages:</h4>
+            <ul>
+              <li>Directly optimizes for response time</li>
+              <li>Adapts to current system conditions</li>
+              <li>Works well with heterogeneous tasks and processors</li>
+            </ul>
+          </div>
+          
+          <div class="algorithm-cons">
+            <h4>Disadvantages:</h4>
+            <ul>
+              <li>Requires monitoring response times</li>
+              <li>Higher overhead than simpler algorithms</li>
+              <li>May be sensitive to measurement noise</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="algorithm">
+        <h3>5. Resource-Based</h3>
+        <p>Distributes tasks based on actual resource utilization metrics like CPU load, memory usage, or I/O activity.</p>
+        
+        <div class="algorithm-details">
+          <div class="algorithm-pros">
+            <h4>Advantages:</h4>
+            <ul>
+              <li>Most accurate representation of actual load</li>
+              <li>Can balance multiple resource types</li>
+              <li>Works well in complex heterogeneous environments</li>
+            </ul>
+          </div>
+          
+          <div class="algorithm-cons">
+            <h4>Disadvantages:</h4>
+            <ul>
+              <li>Highest implementation complexity</li>
+              <li>Significant monitoring overhead</li>
+              <li>May require tuning of resource weights</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-to-use">
+      <h2>How to Run the Simulation</h2>
+      <div class="instructions">
+          <div class="instruction-step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                  <h3>Configure Simulation Parameters</h3>
+                  <ul>
+                      <li><strong>Algorithm:</strong> Select which load balancing algorithm to simulate</li>
+                      <li><strong>Number of Processors:</strong> Set how many processors (2-10) are in your system</li>
+                      <li><strong>Processor Weights:</strong> Optionally set relative weights (comma-separated) if using weighted algorithms</li>
+                      <li><strong>Task List:</strong> Enter task durations (comma-separated numbers) or click "Random" to generate</li>
+                  </ul>
+              </div>
+          </div>
+          
+          <div class="instruction-step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                  <h3>Run the Simulation</h3>
+                  <ul>
+                      <li><strong>Run Simulation:</strong> Runs the entire simulation automatically</li>
+                      <li><strong>Step Through:</strong> Advances one time unit at a time so you can follow each step</li>
+                      <li><strong>Reset:</strong> Clears the current simulation to start fresh</li>
+                  </ul>
+              </div>
+          </div>
+          
+          <div class="instruction-step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                  <h3>Understand the Results</h3>
+                  <ul>
+                      <li><strong>Processor Table:</strong> Shows current state of each processor and its tasks</li>
+                      <li><strong>Gantt Chart:</strong> Visual timeline of task execution across processors</li>
+                      <li><strong>Statistics:</strong> Key metrics about load distribution and performance</li>
+                      <li><strong>Details:</strong> Step-by-step explanation of what happened at each time unit</li>
+                  </ul>
+              </div>
+          </div>
+          
+          <div class="instruction-tip">
+              <h3>Tips for Beginners</h3>
+              <ul>
+                  <li>Start with a small number of tasks (3-5) and processors (2-3) to understand the basics</li>
+                  <li>Use "Step Through" mode to follow the algorithm's decision-making process</li>
+                  <li>Compare different algorithms with the same task list to see how they differ</li>
+                  <li>Try unequal processor weights to see how weighted algorithms distribute tasks</li>
+              </ul>
+          </div>
+      </div>
+  </section>
+
+    <section id="simulation">
+      <h2>Load Balancing Simulation</h2>
+      <div class="simulation-controls">
+        <div class="input-group">
+          <label for="algorithm">Algorithm:</label>
+          <select id="algorithm">
+            <option value="round-robin">Round Robin</option>
+            <option value="least-connections">Least Connections</option>
+            <option value="weighted-rr">Weighted Round Robin</option>
+            <option value="least-response">Least Response Time</option>
+            <option value="resource-based">Resource-Based</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="processors">Number of Processors:</label>
+          <input type="number" id="processors" min="1" max="10" value="4">
+        </div>
+        <div class="input-group">
+          <label for="processor-weights">Processor Weights (comma-separated):</label>
+          <input type="text" id="processor-weights" value="1,1,2,1" placeholder="Leave empty for equal weights">
+        </div>
+        <div class="input-group">
+          <label for="task-list">Task List (comma-separated durations):</label>
+          <input type="text" id="task-list" value="5,3,7,2,4,6,1,8,3,5">
+          <button id="random-tasks" type="button">Random</button>
+        </div>
+        <div class="input-group buttons">
+          <button id="run-simulation" type="button">Run Simulation</button>
+          <button id="step-simulation" type="button">Step Through</button>
+          <button id="reset-simulation" type="button">Reset</button>
+        </div>
+      </div>
+      <div class="simulation-results">
+        <div class="visualization">
+          <h3>Algorithm Visualization</h3>
+          <div id="visualization-container"></div>
+          <div id="stats-container"></div>
+        </div>
+        <div class="details">
+          <h3>Simulation Details</h3>
+          <div id="details-container"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>Created for educational purposes - Load Balancing Algorithms Simulation</p>
+  </footer>
+  <script src="load-balancing.js"></script>
+</body>
+</html>

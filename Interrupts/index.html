@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/vite.svg">
+  <title>CPU Interrupt Simulation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+      <h1>CPU Interrupt Handling Simulation</h1>
+      <p class="subtitle">A visual guide to how operating systems handle interrupts</p>
+    </header>
+  <div class="container">
+
+    <section id="theory-section">
+      <div class="theory-nav">
+        <button class="theory-tab active" data-tab="intro">Introduction</button>
+        <button class="theory-tab" data-tab="interrupts">Interrupts</button>
+        <button class="theory-tab" data-tab="ivt">Interrupt Vector Table</button>
+        <button class="theory-tab" data-tab="isr">Interrupt Service Routines</button>
+        <button class="theory-tab" data-tab="pcb">Process Control Block</button>
+      </div>
+      
+      <div class="theory-content" id="theory-content">
+        <!-- Content will be loaded from theory.js -->
+      </div>
+    </section>
+
+    <section id="simulation-section">
+      <h2>Interactive Simulation</h2>
+      <p>Select an interrupt type to see how the CPU handles it</p>
+      
+      <div class="interrupt-buttons">
+        <button class="interrupt-btn" data-type="keyboard">Keyboard Interrupt</button>
+        <button class="interrupt-btn" data-type="timer">Timer Interrupt</button>
+        <button class="interrupt-btn" data-type="io">I/O Interrupt</button>
+        <button class="interrupt-btn" data-type="software">Software Interrupt</button>
+        <button class="interrupt-btn" data-type="hardware">Hardware Error</button>
+      </div>
+      
+      <div class="simulation-container">
+        <div class="cpu-section">
+          <div class="cpu">
+            <h3>CPU</h3>
+            <div class="cpu-status">Executing Process: <span id="current-process">Calculator App</span></div>
+            <div class="cpu-registers">
+              <div>PC: <span id="program-counter">0x1A3F</span></div>
+              <div>SP: <span id="stack-pointer">0xFFE8</span></div>
+              <div>Status: <span id="cpu-status">Running</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="memory-section">
+          <div class="memory-ivt">
+            <h3>Interrupt Vector Table</h3>
+            <div class="ivt-entries" id="ivt-table">
+              <!-- IVT entries will be populated by JavaScript -->
+            </div>
+          </div>
+          
+          <div class="memory-pcb">
+            <h3>Process Control Block</h3>
+            <div class="pcb-content" id="pcb-content">
+              <div>Process ID: <span id="pcb-pid">1024</span></div>
+              <div>State: <span id="pcb-state">Running</span></div>
+              <div>PC: <span id="pcb-pc">0x1A3F</span></div>
+              <div>SP: <span id="pcb-sp">0xFFE8</span></div>
+              <div>Registers: <span id="pcb-registers">...</span></div>
+            </div>
+          </div>
+          
+          <div class="memory-isr">
+            <h3>ISR Memory</h3>
+            <div class="isr-content" id="isr-content">
+              <pre id="isr-code">// Waiting for interrupt...</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="simulation-controls">
+        <div class="simulation-log" id="simulation-log">
+          <div class="log-title">Execution Log</div>
+          <div class="log-content" id="log-content"></div>
+        </div>
+        
+        <div class="simulation-steps">
+          <button id="next-step" disabled>Next Step</button>
+          <button id="reset-sim">Reset</button>
+        </div>
+      </div>
+    </section>
+    
+    <footer>
+      <p>CPU Interrupt Simulation &copy; 2025</p>
+    </footer>
+  </div>
+
+  <script src="main.js" type="module"></script>
+</body>
+</html>

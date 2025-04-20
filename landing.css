@@ -457,3 +457,26 @@ header h1 {
 .demo{
   background: transparent;
 }
+
+
+/* 
+.extra {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(to right, #3498db, #9b59b6);
+  border-radius: 5px 5px 0 0;
+} */
+
+.highlight-icon {
+  display: inline-block;
+  margin-right: 8px;
+  color: #dbd034;
+  font-size: 1.6rem;
+}
+
+
+ 
