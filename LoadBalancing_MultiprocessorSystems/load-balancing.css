@@ -106,76 +106,6 @@ li {
     color: #333;
 }
 
-/* How to Use section styling */
-#how-to-use {
-    background-color: #f9f9fd;
-    padding: 25px;
-    border-radius: 8px;
-    border-left: 5px solid #9b59b6;
-}
-
-.instructions {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    margin-top: 20px;
-}
-
-.instruction-step {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-}
-
-.step-number {
-    background-color: #3498db;
-    color: white;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    flex-shrink: 0;
-    margin-top: 3px;
-}
-
-.step-content {
-    flex: 1;
-}
-
-.step-content h3 {
-    color: #2c3e50;
-    margin-top: 0;
-    margin-bottom: 10px;
-}
-
-.instruction-tip {
-    background-color: #fff9e6;
-    padding: 20px;
-    border-radius: 8px;
-    border-left: 4px solid #f1c40f;
-    margin-top: 20px;
-}
-
-.instruction-tip h3 {
-    color: #d35400;
-    margin-top: 0;
-}
-
-/* Responsive adjustments for instructions */
-@media (max-width: 600px) {
-    .instruction-step {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .step-number {
-        margin-top: 0;
-    }
-}
-
 /* Simulation controls styling */
 .simulation-controls {
     background: linear-gradient(to right, #f0f5ff, #e6f3ff);
@@ -411,38 +341,4 @@ button:active {
 footer {
     text-align: center;
     padding: 40px;
-}
-
-/* Tooltip styling */
-[data-tooltip] {
-    position: relative;
-}
-
-[data-tooltip]:hover::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #333;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 0.9em;
-    white-space: nowrap;
-    z-index: 100;
-    margin-bottom: 5px;
-}
-
-[data-tooltip]:hover::before {
-    content: '';
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 5px;
-    border-style: solid;
-    border-color: #333 transparent transparent transparent;
-    margin-bottom: -5px;
-    z-index: 100;
 }
